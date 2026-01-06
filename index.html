@@ -269,6 +269,15 @@
             font-size: 0.9rem;
         }
 
+        .stat-card.warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+
+        .stat-card.warning h3 {
+            color: #ff9800;
+        }
+
         .calendar-container {
             background: white;
             padding: 2rem;
@@ -374,6 +383,20 @@
             border-radius: 8px;
             margin-bottom: 0.5rem;
             border-left: 4px solid #8B4513;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .reservation-mini.pendiente {
+            background: #fff8e1;
+            border-left-color: #ff9800;
+        }
+
+        .reservation-mini.confirmada {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
         }
 
         .reservation-mini strong {
@@ -385,6 +408,45 @@
         .reservation-mini small {
             color: #666;
             font-size: 0.9rem;
+        }
+
+        .estado-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .estado-badge.pendiente {
+            background: #fff3cd;
+            color: #ff9800;
+            border: 1px solid #ff9800;
+        }
+
+        .estado-badge.confirmada {
+            background: #d4edda;
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+
+        .confirm-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+        }
+
+        .confirm-btn:hover {
+            background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
         }
 
         .no-reservations {
@@ -411,7 +473,18 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            gap: 1rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .reservation-item.pendiente {
+            background: #fff8e1;
+            border-left-color: #ff9800;
+        }
+
+        .reservation-item.confirmada {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
         }
 
         .reservation-info {
@@ -429,6 +502,12 @@
         .reservation-info small {
             color: #666;
             font-size: 0.95rem;
+        }
+
+        .reservation-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .delete-btn {
@@ -1131,6 +1210,18 @@
 
             .reservation-mini {
                 padding: 0.7rem;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .reservation-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .confirm-btn, .delete-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
             }
 
             .admin-stats {
@@ -1193,17 +1284,17 @@
 
             <div class="admin-content" id="adminContent">
                 <div class="admin-stats">
+                    <div class="stat-card warning">
+                        <h3 id="reservasPendientes">0</h3>
+                        <p>🟡 Pendientes de Confirmar</p>
+                    </div>
                     <div class="stat-card">
-                        <h3 id="totalReservas">0</h3>
-                        <p>Reservas Totales</p>
+                        <h3 id="reservasConfirmadas">0</h3>
+                        <p>🟢 Confirmadas</p>
                     </div>
                     <div class="stat-card">
                         <h3 id="reservasHoy">0</h3>
                         <p>Reservas Hoy</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3 id="personasTotal">0</h3>
-                        <p>Personas Total</p>
                     </div>
                     <div class="stat-card">
                         <h3 id="ingresosEstimados">0€</h3>
@@ -1463,6 +1554,13 @@
                     <label>💬 Comentarios</label>
                     <textarea id="manualComentarios"></textarea>
                 </div>
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select id="manualEstado">
+                        <option value="confirmada">🟢 Confirmada (ya me llegó el WhatsApp)</option>
+                        <option value="pendiente">🟡 Pendiente (todavía no confirmada)</option>
+                    </select>
+                </div>
                 <div style="display: flex; gap: 1rem;">
                     <button type="submit" class="submit-btn" style="flex: 1;">✅ Guardar</button>
                     <button type="button" class="cancel-btn" style="flex: 1;" onclick="cerrarModalReserva()">❌ Cancelar</button>
@@ -1597,6 +1695,7 @@
         const UMBRAL_ROJO = 10;
         const PIN_ADMIN = '1234';
         const PRECIO_MEDIO = 25;
+        const EXPIRACION_HORAS = 24;
 
         function abrirModalAdmin() {
             document.getElementById('adminModal').classList.add('show');
@@ -1619,6 +1718,7 @@
             if (pin === PIN_ADMIN) {
                 document.getElementById('adminLogin').style.display = 'none';
                 document.getElementById('adminContent').classList.add('active');
+                limpiarReservasExpiradas();
                 cargarDatosAdmin();
             } else {
                 alert('❌ PIN incorrecto. Intenta de nuevo.');
@@ -1636,6 +1736,23 @@
             localStorage.setItem('reservas', JSON.stringify(reservas));
         }
 
+        function limpiarReservasExpiradas() {
+            const reservas = obtenerReservas();
+            const ahora = new Date();
+            const reservasActivas = reservas.filter(r => {
+                if (r.estado === 'confirmada') return true;
+
+                const fechaCreacion = new Date(r.timestamp);
+                const horasTranscurridas = (ahora - fechaCreacion) / (1000 * 60 * 60);
+
+                return horasTranscurridas < EXPIRACION_HORAS;
+            });
+
+            if (reservasActivas.length !== reservas.length) {
+                guardarReservas(reservasActivas);
+            }
+        }
+
         function calcularOcupacion(fecha, turno) {
             const reservas = obtenerReservas();
             const horasMediodia = ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30'];
@@ -1644,7 +1761,7 @@
             let horasFiltro = turno === 'mediodia' ? horasMediodia : horasNoche;
 
             const ocupacion = reservas
-                .filter(r => r.fecha === fecha && horasFiltro.includes(r.hora))
+                .filter(r => r.fecha === fecha && horasFiltro.includes(r.hora) && r.estado === 'confirmada')
                 .reduce((sum, r) => {
                     const pers = r.personas === 'mas8' ? 10 : parseInt(r.personas);
                     return sum + pers;
@@ -1673,10 +1790,10 @@
             const disponibleNoche = CAPACIDAD_NOCHE - ocupacionNoche;
 
             const mediodia = document.createElement('optgroup');
-            mediodia.label = `Mediodía (${disponibleMediodia}/${CAPACIDAD_MEDIODIA} personas)`;
+            mediodia.label = `Mediodía (${disponibleMediodia}/${CAPACIDAD_MEDIODIA} personas confirmadas)`;
 
             const cena = document.createElement('optgroup');
-            cena.label = `Cena (${disponibleNoche}/${CAPACIDAD_NOCHE} personas)`;
+            cena.label = `Cena (${disponibleNoche}/${CAPACIDAD_NOCHE} personas confirmadas)`;
 
             if (disponibleMediodia > 0) {
                 ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30'].forEach(hora => {
@@ -1728,7 +1845,7 @@
             if (personasVal === 'mas8') {
                 infoDiv.innerHTML = '<div class="availability-info warning">⚠️ Para grupos grandes, confirmaremos disponibilidad por WhatsApp</div>';
             } else if (personas > disponible) {
-                infoDiv.innerHTML = '<div class="availability-info full">❌ No hay suficientes plazas</div>';
+                infoDiv.innerHTML = '<div class="availability-info full">❌ No hay suficientes plazas confirmadas</div>';
             } else if (disponible - personas < 5) {
                 infoDiv.innerHTML = '<div class="availability-info warning">⚠️ Quedan pocas plazas: ' + disponible + '/' + capacidad + '</div>';
             } else {
@@ -1754,7 +1871,7 @@
                 const disponible = capacidad - ocupacion;
 
                 if (personas > disponible) {
-                    alert('❌ Lo sentimos, no hay suficientes plazas disponibles.');
+                    alert('❌ Lo sentimos, no hay suficientes plazas confirmadas.');
                     return;
                 }
             }
@@ -1767,6 +1884,7 @@
                 hora: hora,
                 personas: personasVal,
                 comentarios: comentarios,
+                estado: 'pendiente',
                 timestamp: new Date().toISOString()
             });
             guardarReservas(reservas);
@@ -1788,22 +1906,37 @@
             window.open(`https://wa.me/34669670985?text=${mensaje}`, '_blank');
 
             document.getElementById('reservaForm').reset();
-            document.getElementById('availabilityInfo').innerHTML = '<div class="availability-info">✅ Reserva enviada</div>';
+            document.getElementById('availabilityInfo').innerHTML = '<div class="availability-info">✅ Reserva enviada (quedará pendiente hasta confirmar)</div>';
+        }
+
+        function confirmarReserva(id) {
+            let reservas = obtenerReservas();
+            reservas = reservas.map(r => {
+                if (r.id === id) {
+                    return { ...r, estado: 'confirmada' };
+                }
+                return r;
+            });
+            guardarReservas(reservas);
+            cargarDatosAdmin();
         }
 
         function cargarDatosAdmin() {
             const reservas = obtenerReservas();
             const hoy = new Date().toISOString().split('T')[0];
 
-            document.getElementById('totalReservas').textContent = reservas.length;
-            document.getElementById('reservasHoy').textContent = reservas.filter(r => r.fecha === hoy).length;
+            const pendientes = reservas.filter(r => r.estado === 'pendiente');
+            const confirmadas = reservas.filter(r => r.estado === 'confirmada');
 
-            const totalPersonas = reservas.reduce((sum, r) => {
+            document.getElementById('reservasPendientes').textContent = pendientes.length;
+            document.getElementById('reservasConfirmadas').textContent = confirmadas.length;
+            document.getElementById('reservasHoy').textContent = confirmadas.filter(r => r.fecha === hoy).length;
+
+            const totalPersonas = confirmadas.reduce((sum, r) => {
                 const pers = r.personas === 'mas8' ? 10 : parseInt(r.personas);
                 return sum + pers;
             }, 0);
 
-            document.getElementById('personasTotal').textContent = totalPersonas;
             document.getElementById('ingresosEstimados').textContent = (totalPersonas * PRECIO_MEDIO).toFixed(0) + '€';
 
             generarCalendario();
@@ -1839,7 +1972,7 @@
                 div.innerHTML = `
                     <strong>${fecha.getDate()}</strong><br>
                     <small>${fecha.toLocaleDateString('es-ES', { weekday: 'short' })}</small><br>
-                    <small>${totalPersonas} pers.</small>
+                    <small>${totalPersonas} conf.</small>
                 `;
 
                 grid.appendChild(div);
@@ -1874,10 +2007,24 @@
                     .sort((a, b) => a.hora.localeCompare(b.hora))
                     .map(r => {
                         const personasTexto = r.personas === 'mas8' ? 'Más de 8' : r.personas;
+                        const estadoClass = r.estado === 'pendiente' ? 'pendiente' : 'confirmada';
+                        const estadoBadge = r.estado === 'pendiente' 
+                            ? '<span class="estado-badge pendiente">🟡 PENDIENTE</span>' 
+                            : '<span class="estado-badge confirmada">🟢 CONFIRMADA</span>';
+                        const botonConfirmar = r.estado === 'pendiente' 
+                            ? `<button class="confirm-btn" onclick="confirmarReserva(${r.id})">✅ Confirmar</button>` 
+                            : '';
+
                         return `
-                            <div class="reservation-mini">
-                                <strong>${r.hora} - ${r.nombre}</strong>
-                                <small>👥 ${personasTexto} personas ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
+                            <div class="reservation-mini ${estadoClass}">
+                                <div>
+                                    <strong>${r.hora} - ${r.nombre}</strong>
+                                    <small>👥 ${personasTexto} personas ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
+                                </div>
+                                <div class="reservation-actions">
+                                    ${estadoBadge}
+                                    ${botonConfirmar}
+                                </div>
                             </div>
                         `;
                     }).join('');
@@ -1891,10 +2038,24 @@
                     .sort((a, b) => a.hora.localeCompare(b.hora))
                     .map(r => {
                         const personasTexto = r.personas === 'mas8' ? 'Más de 8' : r.personas;
+                        const estadoClass = r.estado === 'pendiente' ? 'pendiente' : 'confirmada';
+                        const estadoBadge = r.estado === 'pendiente' 
+                            ? '<span class="estado-badge pendiente">🟡 PENDIENTE</span>' 
+                            : '<span class="estado-badge confirmada">🟢 CONFIRMADA</span>';
+                        const botonConfirmar = r.estado === 'pendiente' 
+                            ? `<button class="confirm-btn" onclick="confirmarReserva(${r.id})">✅ Confirmar</button>` 
+                            : '';
+
                         return `
-                            <div class="reservation-mini">
-                                <strong>${r.hora} - ${r.nombre}</strong>
-                                <small>👥 ${personasTexto} personas ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
+                            <div class="reservation-mini ${estadoClass}">
+                                <div>
+                                    <strong>${r.hora} - ${r.nombre}</strong>
+                                    <small>👥 ${personasTexto} personas ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
+                                </div>
+                                <div class="reservation-actions">
+                                    ${estadoBadge}
+                                    ${botonConfirmar}
+                                </div>
                             </div>
                         `;
                     }).join('');
@@ -1922,15 +2083,26 @@
                 const fechaFormateada = fechaObj.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
 
                 const personasTexto = r.personas === 'mas8' ? 'Más de 8 personas' : r.personas + ' personas';
+                const estadoClass = r.estado === 'pendiente' ? 'pendiente' : 'confirmada';
+                const estadoBadge = r.estado === 'pendiente' 
+                    ? '<span class="estado-badge pendiente">🟡 PENDIENTE</span>' 
+                    : '<span class="estado-badge confirmada">🟢 CONFIRMADA</span>';
+                const botonConfirmar = r.estado === 'pendiente' 
+                    ? `<button class="confirm-btn" onclick="confirmarReserva(${r.id})">✅ Confirmar</button>` 
+                    : '';
 
                 const div = document.createElement('div');
-                div.className = 'reservation-item';
+                div.className = `reservation-item ${estadoClass}`;
                 div.innerHTML = `
                     <div class="reservation-info">
                         <strong>${r.nombre} - ${fechaFormateada} a las ${r.hora}</strong>
                         <small>👥 ${personasTexto} ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
                     </div>
-                    <button class="delete-btn" onclick="eliminarReserva(${r.id})">🗑️ Eliminar</button>
+                    <div class="reservation-actions">
+                        ${estadoBadge}
+                        ${botonConfirmar}
+                        <button class="delete-btn" onclick="eliminarReserva(${r.id})">🗑️ Eliminar</button>
+                    </div>
                 `;
                 lista.appendChild(div);
             });
@@ -1967,6 +2139,7 @@
                 hora: document.getElementById('manualHora').value,
                 personas: document.getElementById('manualPersonas').value,
                 comentarios: document.getElementById('manualComentarios').value,
+                estado: document.getElementById('manualEstado').value,
                 timestamp: new Date().toISOString()
             });
             guardarReservas(reservas);
