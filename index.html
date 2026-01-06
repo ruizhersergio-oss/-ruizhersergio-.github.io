@@ -89,7 +89,6 @@
         .nav-links li:nth-child(3) { animation-delay: 0.3s; }
         .nav-links li:nth-child(4) { animation-delay: 0.4s; }
         .nav-links li:nth-child(5) { animation-delay: 0.5s; }
-        .nav-links li:nth-child(6) { animation-delay: 0.6s; }
 
         .nav-links a {
             color: white;
@@ -739,44 +738,6 @@
             color: #c62828;
         }
 
-        .historia {
-            background: #FFF8DC;
-        }
-
-        .historia-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
-
-        .historia-text {
-            font-size: clamp(1.05rem, 2.5vw, 1.1rem);
-            line-height: 1.8;
-        }
-
-        .historia-text p {
-            margin-bottom: 1.5rem;
-        }
-
-        .historia-imagen {
-            background: linear-gradient(rgba(139, 69, 19, 0.8), rgba(160, 82, 45, 0.8)),
-                        url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80');
-            background-size: cover;
-            background-position: center;
-            min-height: 300px;
-            height: 100%;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: clamp(1.05rem, 2.5vw, 1.2rem);
-            text-align: center;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
         .especialidades-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
@@ -936,6 +897,19 @@
             margin-bottom: 0.8rem;
             font-size: clamp(1rem, 2.5vw, 1.1rem);
             line-height: 1.7;
+        }
+
+        .mapa-container {
+            margin-top: 3rem;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .mapa-container iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
         }
 
         .whatsapp-float {
@@ -1104,8 +1078,8 @@
             }
 
             .nav-links a {
-                font-size: 0.65rem;
-                padding: 0.35rem 0.4rem;
+                font-size: 0.7rem;
+                padding: 0.35rem 0.5rem;
                 white-space: nowrap;
             }
 
@@ -1180,11 +1154,6 @@
                 grid-template-columns: 1fr;
             }
 
-            .historia-content {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
             .legal-content {
                 padding: 2rem 1.5rem;
             }
@@ -1194,6 +1163,10 @@
                 right: 20px;
                 width: 55px;
                 height: 55px;
+            }
+
+            .mapa-container iframe {
+                height: 300px;
             }
         }
     </style>
@@ -1273,7 +1246,6 @@
             <ul class="nav-links">
                 <li><a href="#inicio">Inicio</a></li>
                 <li><a href="#reserva">Reservar</a></li>
-                <li><a href="#historia">Historia</a></li>
                 <li><a href="#especialidades">Especialidades</a></li>
                 <li><a href="#menu">Menú</a></li>
                 <li><a href="#contacto">Contacto</a></li>
@@ -1347,22 +1319,6 @@
                     <span>Reservar por WhatsApp</span>
                 </button>
             </form>
-        </div>
-    </section>
-
-    <section id="historia" class="historia">
-        <h2>Nuestra Historia</h2>
-        <div class="historia-content">
-            <article class="historia-text">
-                <p>En el corazón de <strong>Daimiel</strong>, <strong>Restaurante La Clave</strong> es sinónimo de cocina casera auténtica y pasión por los sabores manchegos.</p>
-
-                <p>Nuestro local, ubicado en la <strong>Calle Cruz Ana María, 2</strong>, se distingue por su decoración única inspirada en las emblemáticas cabinas telefónicas londinenses.</p>
-
-                <p>Aquí no solo servimos comida, compartimos experiencias culinarias que conectan con las raíces de nuestra tierra.</p>
-            </article>
-            <aside class="historia-imagen">
-                <p>📍 Un rincón especial en Daimiel<br>donde la tradición cobra vida</p>
-            </aside>
         </div>
     </section>
 
@@ -1447,6 +1403,10 @@
                 <p><strong>Lunes a Viernes:</strong><br>13:00 - 16:00 | 20:00 - 23:00</p>
                 <p><strong>Sábados y Domingos:</strong><br>13:00 - 16:30 | 20:00 - 23:30</p>
             </aside>
+        </div>
+
+        <div class="mapa-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3039.8!2d-3.6152!3d39.0708!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd6bcce89c3e3b93%3A0x8e7c82a8f7c4e5f0!2sCalle%20Cruz%20Ana%20Mar%C3%ADa%2C%202%2C%2013250%20Daimiel%2C%20Ciudad%20Real!5e0!3m2!1ses!2ses!4v1641234567890!5m2!1ses!2ses" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
     </section>
 
