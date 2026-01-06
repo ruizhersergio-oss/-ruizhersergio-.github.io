@@ -298,6 +298,7 @@
             cursor: pointer;
             transition: all 0.3s;
             border: 2px solid #ddd;
+            font-size: 0.95rem;
         }
 
         .calendar-day:hover {
@@ -1131,6 +1132,73 @@
                 white-space: nowrap;
             }
 
+            /* CALENDARIO MÓVIL - MÁS COMPACTO */
+            .admin-modal-content {
+                padding: 1rem;
+            }
+
+            .calendar-container {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .calendar-header h3 {
+                font-size: 1rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.3rem;
+            }
+
+            .calendar-day {
+                padding: 0.5rem 0.3rem;
+                font-size: 0.75rem;
+                border-width: 1px;
+            }
+
+            .calendar-day strong {
+                font-size: 0.9rem;
+            }
+
+            .calendar-day small {
+                font-size: 0.65rem;
+            }
+
+            .day-reservations {
+                padding: 1rem;
+            }
+
+            .day-reservations h3 {
+                font-size: 1.1rem;
+            }
+
+            .turno-section h4 {
+                font-size: 1rem;
+            }
+
+            .reservation-mini {
+                padding: 0.7rem;
+            }
+
+            .admin-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.8rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-card h3 {
+                font-size: 1.5rem;
+            }
+
+            .stat-card p {
+                font-size: 0.8rem;
+            }
+
             .form-row {
                 grid-template-columns: 1fr;
             }
@@ -1138,14 +1206,6 @@
             .historia-content {
                 grid-template-columns: 1fr;
                 gap: 2rem;
-            }
-
-            .calendar-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-
-            .admin-stats {
-                grid-template-columns: 1fr;
             }
 
             .legal-content {
