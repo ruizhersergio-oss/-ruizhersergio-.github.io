@@ -329,6 +329,68 @@
             cursor: not-allowed;
         }
 
+        .calendar-day.selected {
+            border: 3px solid #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .day-reservations {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .day-reservations.show {
+            display: block;
+        }
+
+        .day-reservations h3 {
+            color: #8B4513;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .turno-section {
+            margin-bottom: 2rem;
+        }
+
+        .turno-section h4 {
+            color: #8B4513;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .reservation-mini {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid #8B4513;
+        }
+
+        .reservation-mini strong {
+            color: #8B4513;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .reservation-mini small {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .no-reservations {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
         .reservations-list {
             background: white;
             padding: 2rem;
@@ -474,9 +536,11 @@
             background: white;
             padding: 2rem;
             border-radius: 15px;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
             margin: 2rem;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @keyframes fadeInDown {
@@ -906,6 +970,101 @@
             margin-bottom: 0.5rem;
         }
 
+        .footer-links {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .legal-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10004;
+            overflow-y: auto;
+        }
+
+        .legal-modal.show {
+            display: flex;
+            align-items: start;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        .legal-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+            margin: 2rem;
+        }
+
+        .legal-content h2 {
+            color: #8B4513;
+            margin-bottom: 2rem;
+        }
+
+        .legal-content h3 {
+            color: #8B4513;
+            font-size: 1.3rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .legal-content p {
+            color: #333;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .legal-content ul {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .legal-content ul li {
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+
+        .close-legal-btn {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 2rem auto 0;
+        }
+
+        .close-legal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(139, 69, 19, 0.4);
+        }
+
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -922,6 +1081,10 @@
 
             .admin-stats {
                 grid-template-columns: 1fr;
+            }
+
+            .legal-content {
+                padding: 2rem 1.5rem;
             }
         }
     </style>
@@ -973,6 +1136,18 @@
                         <h3 style="color: #8B4513;">📅 Calendario de Reservas (Próximos 30 días)</h3>
                     </div>
                     <div class="calendar-grid" id="calendarGrid"></div>
+                </div>
+
+                <div class="day-reservations" id="dayReservations">
+                    <h3 id="dayTitle">Reservas del día</h3>
+                    <div class="turno-section">
+                        <h4>🌅 Mediodía</h4>
+                        <div id="reservasMediodia"></div>
+                    </div>
+                    <div class="turno-section">
+                        <h4>🌙 Cena</h4>
+                        <div id="reservasNoche"></div>
+                    </div>
                 </div>
 
                 <div class="reservations-list">
@@ -1225,6 +1400,106 @@
         </div>
     </div>
 
+    <div class="legal-modal" id="avisoLegalModal">
+        <div class="legal-content">
+            <h2>⚖️ Aviso Legal y Política de Privacidad</h2>
+
+            <h3>1. Información General</h3>
+            <p><strong>Titular:</strong> Restaurante La Clave<br>
+            <strong>Dirección:</strong> Calle Cruz Ana María, 2 - 13250 Daimiel, Ciudad Real<br>
+            <strong>Teléfono:</strong> 669 67 09 85</p>
+
+            <h3>2. Objeto</h3>
+            <p>El presente aviso legal regula el uso del sitio web de Restaurante La Clave. La navegación por este sitio web atribuye la condición de usuario del mismo e implica la aceptación de todas las condiciones incluidas en este aviso legal.</p>
+
+            <h3>3. Política de Privacidad</h3>
+            <p>En cumplimiento del Reglamento (UE) 2016/679 del Parlamento Europeo y del Consejo, de 27 de abril de 2016 (RGPD), le informamos:</p>
+
+            <h4>Responsable del tratamiento:</h4>
+            <p>Restaurante La Clave</p>
+
+            <h4>Finalidad del tratamiento:</h4>
+            <ul>
+                <li>Gestión de reservas y consultas</li>
+                <li>Envío de comunicaciones relacionadas con nuestros servicios</li>
+                <li>Cumplimiento de obligaciones legales</li>
+            </ul>
+
+            <h4>Base legal:</h4>
+            <p>Consentimiento del interesado y ejecución de contrato de servicios.</p>
+
+            <h4>Destinatarios:</h4>
+            <p>Los datos no serán cedidos a terceros salvo obligación legal.</p>
+
+            <h4>Derechos:</h4>
+            <p>Puede ejercer los derechos de acceso, rectificación, supresión, limitación, portabilidad y oposición dirigiéndose a: Restaurante La Clave, Calle Cruz Ana María, 2 - 13250 Daimiel, o al teléfono 669 67 09 85.</p>
+
+            <h4>Conservación:</h4>
+            <p>Los datos se conservarán mientras se mantenga la relación comercial o durante los años necesarios para cumplir con las obligaciones legales.</p>
+
+            <h3>4. Propiedad Intelectual</h3>
+            <p>Todos los contenidos de este sitio web (textos, imágenes, marcas, gráficos, logotipos) son propiedad de Restaurante La Clave o de terceros que han autorizado su uso, y están protegidos por las leyes de propiedad intelectual e industrial.</p>
+
+            <h3>5. Responsabilidad</h3>
+            <p>Restaurante La Clave no se hace responsable de la información y contenidos almacenados en foros, redes sociales o cualesquiera otros medios que permitan a terceros publicar contenidos de forma independiente.</p>
+
+            <h3>6. Modificaciones</h3>
+            <p>Restaurante La Clave se reserva el derecho de efectuar sin previo aviso las modificaciones que considere oportunas en su web.</p>
+
+            <h3>7. Legislación Aplicable</h3>
+            <p>El presente aviso legal se rige por la legislación española vigente.</p>
+
+            <button class="close-legal-btn" onclick="cerrarAvisoLegal()">Cerrar</button>
+        </div>
+    </div>
+
+    <div class="legal-modal" id="cookiesModal">
+        <div class="legal-content">
+            <h2>🍪 Política de Cookies</h2>
+
+            <h3>1. ¿Qué son las cookies?</h3>
+            <p>Las cookies son pequeños archivos de texto que los sitios web almacenan en tu dispositivo cuando los visitas. Son ampliamente utilizadas para hacer que los sitios web funcionen de manera más eficiente.</p>
+
+            <h3>2. Tipos de cookies que utilizamos</h3>
+
+            <h4>Cookies técnicas (necesarias):</h4>
+            <ul>
+                <li><strong>localStorage:</strong> Almacenamos las reservas localmente para el funcionamiento del sistema de gestión</li>
+                <li>Son esenciales para el funcionamiento del sitio web</li>
+                <li>No requieren consentimiento según la normativa</li>
+            </ul>
+
+            <h4>Cookies de análisis:</h4>
+            <p>Actualmente no utilizamos cookies de análisis ni seguimiento de terceros.</p>
+
+            <h3>3. Gestión de cookies</h3>
+            <p>Puedes configurar tu navegador para rechazar cookies, pero esto puede afectar al funcionamiento del sitio web, especialmente al sistema de reservas.</p>
+
+            <h4>Cómo eliminar cookies:</h4>
+            <ul>
+                <li><strong>Chrome:</strong> Configuración → Privacidad y seguridad → Borrar datos de navegación</li>
+                <li><strong>Firefox:</strong> Opciones → Privacidad y seguridad → Cookies y datos del sitio</li>
+                <li><strong>Safari:</strong> Preferencias → Privacidad → Gestionar datos de sitios web</li>
+                <li><strong>Edge:</strong> Configuración → Privacidad y servicios → Borrar datos de exploración</li>
+            </ul>
+
+            <h3>4. Cookies de terceros</h3>
+            <p>Nuestro sitio web no utiliza cookies de terceros como Google Analytics, Facebook Pixel u otras herramientas de marketing.</p>
+
+            <h3>5. Actualización de la política</h3>
+            <p>Esta política de cookies puede ser modificada. Te recomendamos revisarla periódicamente.</p>
+
+            <h3>6. Más información</h3>
+            <p>Para cualquier duda sobre nuestra política de cookies, puedes contactarnos:</p>
+            <ul>
+                <li>Teléfono: 669 67 09 85</li>
+                <li>Dirección: Calle Cruz Ana María, 2 - 13250 Daimiel, Ciudad Real</li>
+            </ul>
+
+            <button class="close-legal-btn" onclick="cerrarCookies()">Cerrar</button>
+        </div>
+    </div>
+
     <a href="https://wa.me/34669670985?text=Hola%2C%20me%20gustar%C3%ADa%20hacer%20una%20reserva%20en%20Restaurante%20La%20Clave" 
        class="whatsapp-float" 
        target="_blank" 
@@ -1235,6 +1510,10 @@
     <footer>
         <p>&copy; 2026 Restaurante La Clave - Daimiel, Ciudad Real</p>
         <p>Cocina casera manchega con pasión</p>
+        <div class="footer-links">
+            <a href="javascript:void(0)" onclick="abrirAvisoLegal()">Aviso Legal y Privacidad</a>
+            <a href="javascript:void(0)" onclick="abrirCookies()">Política de Cookies</a>
+        </div>
     </footer>
 
     <script>
@@ -1257,6 +1536,7 @@
             document.getElementById('adminLogin').style.display = 'block';
             document.getElementById('adminContent').classList.remove('active');
             document.getElementById('pinInput').value = '';
+            document.getElementById('dayReservations').classList.remove('show');
         }
 
         function verificarPIN() {
@@ -1480,6 +1760,8 @@
 
                 const div = document.createElement('div');
                 div.className = `calendar-day ${clase}`;
+                div.setAttribute('data-fecha', fechaStr);
+                div.onclick = function() { mostrarReservasDia(fechaStr); };
                 div.innerHTML = `
                     <strong>${fecha.getDate()}</strong><br>
                     <small>${fecha.toLocaleDateString('es-ES', { weekday: 'short' })}</small><br>
@@ -1488,6 +1770,68 @@
 
                 grid.appendChild(div);
             }
+        }
+
+        function mostrarReservasDia(fecha) {
+            // Remover selección anterior
+            document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+            // Seleccionar día clickeado
+            document.querySelector(`[data-fecha="${fecha}"]`).classList.add('selected');
+
+            const fechaObj = new Date(fecha + 'T00:00:00');
+            const fechaFormateada = fechaObj.toLocaleDateString('es-ES', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+
+            document.getElementById('dayTitle').textContent = `📅 Reservas del ${fechaFormateada}`;
+
+            const reservas = obtenerReservas().filter(r => r.fecha === fecha);
+            const horasMediodia = ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30'];
+
+            const reservasMediodia = reservas.filter(r => horasMediodia.includes(r.hora));
+            const reservasNoche = reservas.filter(r => !horasMediodia.includes(r.hora));
+
+            // Mediodía
+            const mediodiaDiv = document.getElementById('reservasMediodia');
+            if (reservasMediodia.length === 0) {
+                mediodiaDiv.innerHTML = '<p class="no-reservations">Sin reservas</p>';
+            } else {
+                mediodiaDiv.innerHTML = reservasMediodia
+                    .sort((a, b) => a.hora.localeCompare(b.hora))
+                    .map(r => {
+                        const personasTexto = r.personas === 'mas8' ? 'Más de 8' : r.personas;
+                        return `
+                            <div class="reservation-mini">
+                                <strong>${r.hora} - ${r.nombre}</strong>
+                                <small>👥 ${personasTexto} personas ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
+                            </div>
+                        `;
+                    }).join('');
+            }
+
+            // Noche
+            const nocheDiv = document.getElementById('reservasNoche');
+            if (reservasNoche.length === 0) {
+                nocheDiv.innerHTML = '<p class="no-reservations">Sin reservas</p>';
+            } else {
+                nocheDiv.innerHTML = reservasNoche
+                    .sort((a, b) => a.hora.localeCompare(b.hora))
+                    .map(r => {
+                        const personasTexto = r.personas === 'mas8' ? 'Más de 8' : r.personas;
+                        return `
+                            <div class="reservation-mini">
+                                <strong>${r.hora} - ${r.nombre}</strong>
+                                <small>👥 ${personasTexto} personas ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
+                            </div>
+                        `;
+                    }).join('');
+            }
+
+            document.getElementById('dayReservations').classList.add('show');
+            document.getElementById('dayReservations').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
         function mostrarListaReservas() {
@@ -1562,6 +1906,26 @@
             alert('✅ Reserva añadida');
         }
 
+        function abrirAvisoLegal() {
+            document.getElementById('avisoLegalModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function cerrarAvisoLegal() {
+            document.getElementById('avisoLegalModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function abrirCookies() {
+            document.getElementById('cookiesModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function cerrarCookies() {
+            document.getElementById('cookiesModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const fechaInput = document.getElementById('fecha');
             const hoy = new Date().toISOString().split('T')[0];
@@ -1571,7 +1935,8 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 cerrarModalReserva();
-                cerrarModalAdmin();
+                cerrarAvisoLegal();
+                cerrarCookies();
             }
         });
     </script>
