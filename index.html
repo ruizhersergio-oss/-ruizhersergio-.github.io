@@ -295,55 +295,82 @@
 
         .calendar-grid {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 0.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
         }
 
-        .calendar-day {
-            padding: 1rem;
-            text-align: center;
-            border-radius: 8px;
+        .calendar-day-card {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
             cursor: pointer;
             transition: all 0.3s;
-            border: 2px solid #ddd;
-            font-size: 0.95rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .calendar-day:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .calendar-day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
-        .calendar-day.available {
+        .calendar-day-card.selected {
+            border: 3px solid #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .calendar-day-header {
+            background: #8B4513;
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .calendar-day-header strong {
+            font-size: 1.3rem;
+            display: block;
+        }
+
+        .calendar-day-header small {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .calendar-turnos {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .turno-status {
+            padding: 1rem 0.5rem;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .turno-status:last-child {
+            border-bottom: none;
+        }
+
+        .turno-status.available {
             background: #c8e6c9;
-            border-color: #4caf50;
             color: #1b5e20;
-            font-weight: 600;
         }
 
-        .calendar-day.partial {
+        .turno-status.partial {
             background: #ffe0b2;
-            border-color: #ff9800;
             color: #e65100;
-            font-weight: 600;
         }
 
-        .calendar-day.full {
+        .turno-status.full {
             background: #ffcdd2;
-            border-color: #f44336;
             color: #c62828;
-            font-weight: 600;
         }
 
-        .calendar-day.past {
+        .turno-status.past {
             background: #f5f5f5;
             color: #999;
-            cursor: not-allowed;
-        }
-
-        .calendar-day.selected {
-            border: 3px solid #FFD700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
 
         .day-reservations {
@@ -623,6 +650,30 @@
             margin: 2rem;
             max-height: 90vh;
             overflow-y: auto;
+        }
+
+        .phone-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .prefix-select {
+            width: 120px;
+            padding: 0.8rem 0.5rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: clamp(0.95rem, 2vw, 1rem);
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .prefix-select:focus {
+            outline: none;
+            border-color: #8B4513;
+        }
+
+        .phone-input {
+            flex: 1;
         }
 
         @keyframes fadeInDown {
@@ -1127,7 +1178,7 @@
             box-shadow: 0 10px 25px rgba(139, 69, 19, 0.4);
         }
 
-        /* RESPONSIVE - MÓVIL (menor a 768px) */
+        /* RESPONSIVE - MÓVIL */
         @media (max-width: 768px) {
             .admin-btn-float {
                 bottom: 20px;
@@ -1162,7 +1213,16 @@
                 white-space: nowrap;
             }
 
-            /* CALENDARIO MÓVIL - MÁS COMPACTO */
+            .calendar-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 0.5rem;
+            }
+
+            .turno-status {
+                padding: 0.5rem 0.3rem;
+                font-size: 0.75rem;
+            }
+
             .admin-modal-content {
                 padding: 1rem;
             }
@@ -1170,30 +1230,6 @@
             .calendar-container {
                 padding: 1rem;
                 margin-bottom: 1rem;
-            }
-
-            .calendar-header h3 {
-                font-size: 1rem;
-                margin-bottom: 0.5rem;
-            }
-
-            .calendar-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 0.3rem;
-            }
-
-            .calendar-day {
-                padding: 0.5rem 0.3rem;
-                font-size: 0.75rem;
-                border-width: 1px;
-            }
-
-            .calendar-day strong {
-                font-size: 0.9rem;
-            }
-
-            .calendar-day small {
-                font-size: 0.65rem;
             }
 
             .day-reservations {
@@ -1243,6 +1279,14 @@
 
             .form-row {
                 grid-template-columns: 1fr;
+            }
+
+            .phone-group {
+                flex-direction: column;
+            }
+
+            .prefix-select {
+                width: 100%;
             }
 
             .legal-content {
@@ -1306,7 +1350,7 @@
 
                 <div class="calendar-container">
                     <div class="calendar-header">
-                        <h3 style="color: #8B4513;">📅 Calendario de Reservas (Próximos 30 días)</h3>
+                        <h3 style="color: #8B4513;">📅 Calendario de Reservas</h3>
                     </div>
                     <div class="calendar-grid" id="calendarGrid"></div>
                 </div>
@@ -1365,6 +1409,26 @@
                 <div class="form-group">
                     <label for="nombre">👤 Nombre completo *</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan García">
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">☎️ Teléfono de contacto *</label>
+                    <div class="phone-group">
+                        <select id="prefijo" name="prefijo" class="prefix-select" required>
+                            <option value="+34" selected>🇪🇸 +34</option>
+                            <option value="+33">🇫🇷 +33</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+49">🇩🇪 +49</option>
+                            <option value="+351">🇵🇹 +351</option>
+                            <option value="+39">🇮🇹 +39</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+52">🇲🇽 +52</option>
+                            <option value="+54">🇦🇷 +54</option>
+                        </select>
+                        <input type="tel" id="telefono" name="telefono" class="phone-input" required 
+                               placeholder="600123456" pattern="[0-9]{9}" 
+                               title="Introduce 9 dígitos" maxlength="9">
+                    </div>
                 </div>
 
                 <div class="form-row">
@@ -1510,6 +1574,18 @@
                     <input type="text" id="manualNombre" required>
                 </div>
                 <div class="form-group">
+                    <label>☎️ Teléfono</label>
+                    <div class="phone-group">
+                        <select id="manualPrefijo" class="prefix-select">
+                            <option value="+34" selected>🇪🇸 +34</option>
+                            <option value="+33">🇫🇷 +33</option>
+                            <option value="+44">🇬🇧 +44</option>
+                        </select>
+                        <input type="tel" id="manualTelefono" class="phone-input" 
+                               placeholder="600123456" pattern="[0-9]{9}" maxlength="9">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label>📅 Fecha</label>
                     <input type="date" id="manualFecha" required>
                 </div>
@@ -1557,8 +1633,8 @@
                 <div class="form-group">
                     <label>Estado</label>
                     <select id="manualEstado">
-                        <option value="confirmada">🟢 Confirmada (ya me llegó el WhatsApp)</option>
-                        <option value="pendiente">🟡 Pendiente (todavía no confirmada)</option>
+                        <option value="confirmada">🟢 Confirmada</option>
+                        <option value="pendiente">🟡 Pendiente</option>
                     </select>
                 </div>
                 <div style="display: flex; gap: 1rem;">
@@ -1603,21 +1679,6 @@
             <h4>Derechos:</h4>
             <p>Puede ejercer los derechos de acceso, rectificación, supresión, limitación, portabilidad y oposición dirigiéndose a: Restaurante La Clave, Calle Cruz Ana María, 2 - 13250 Daimiel, o al teléfono 669 67 09 85.</p>
 
-            <h4>Conservación:</h4>
-            <p>Los datos se conservarán mientras se mantenga la relación comercial o durante los años necesarios para cumplir con las obligaciones legales.</p>
-
-            <h3>4. Propiedad Intelectual</h3>
-            <p>Todos los contenidos de este sitio web (textos, imágenes, marcas, gráficos, logotipos) son propiedad de Restaurante La Clave o de terceros que han autorizado su uso, y están protegidos por las leyes de propiedad intelectual e industrial.</p>
-
-            <h3>5. Responsabilidad</h3>
-            <p>Restaurante La Clave no se hace responsable de la información y contenidos almacenados en foros, redes sociales o cualesquiera otros medios que permitan a terceros publicar contenidos de forma independiente.</p>
-
-            <h3>6. Modificaciones</h3>
-            <p>Restaurante La Clave se reserva el derecho de efectuar sin previo aviso las modificaciones que considere oportunas en su web.</p>
-
-            <h3>7. Legislación Aplicable</h3>
-            <p>El presente aviso legal se rige por la legislación española vigente.</p>
-
             <button class="close-legal-btn" onclick="cerrarAvisoLegal()">Cerrar</button>
         </div>
     </div>
@@ -1627,49 +1688,20 @@
             <h2>🍪 Política de Cookies</h2>
 
             <h3>1. ¿Qué son las cookies?</h3>
-            <p>Las cookies son pequeños archivos de texto que los sitios web almacenan en tu dispositivo cuando los visitas. Son ampliamente utilizadas para hacer que los sitios web funcionen de manera más eficiente.</p>
+            <p>Las cookies son pequeños archivos de texto que los sitios web almacenan en tu dispositivo cuando los visitas.</p>
 
             <h3>2. Tipos de cookies que utilizamos</h3>
 
             <h4>Cookies técnicas (necesarias):</h4>
             <ul>
-                <li><strong>localStorage:</strong> Almacenamos las reservas localmente para el funcionamiento del sistema de gestión</li>
-                <li>Son esenciales para el funcionamiento del sitio web</li>
-                <li>No requieren consentimiento según la normativa</li>
-            </ul>
-
-            <h4>Cookies de análisis:</h4>
-            <p>Actualmente no utilizamos cookies de análisis ni seguimiento de terceros.</p>
-
-            <h3>3. Gestión de cookies</h3>
-            <p>Puedes configurar tu navegador para rechazar cookies, pero esto puede afectar al funcionamiento del sitio web, especialmente al sistema de reservas.</p>
-
-            <h4>Cómo eliminar cookies:</h4>
-            <ul>
-                <li><strong>Chrome:</strong> Configuración → Privacidad y seguridad → Borrar datos de navegación</li>
-                <li><strong>Firefox:</strong> Opciones → Privacidad y seguridad → Cookies y datos del sitio</li>
-                <li><strong>Safari:</strong> Preferencias → Privacidad → Gestionar datos de sitios web</li>
-                <li><strong>Edge:</strong> Configuración → Privacidad y servicios → Borrar datos de exploración</li>
-            </ul>
-
-            <h3>4. Cookies de terceros</h3>
-            <p>Nuestro sitio web no utiliza cookies de terceros como Google Analytics, Facebook Pixel u otras herramientas de marketing.</p>
-
-            <h3>5. Actualización de la política</h3>
-            <p>Esta política de cookies puede ser modificada. Te recomendamos revisarla periódicamente.</p>
-
-            <h3>6. Más información</h3>
-            <p>Para cualquier duda sobre nuestra política de cookies, puedes contactarnos:</p>
-            <ul>
-                <li>Teléfono: 669 67 09 85</li>
-                <li>Dirección: Calle Cruz Ana María, 2 - 13250 Daimiel, Ciudad Real</li>
+                <li><strong>localStorage:</strong> Almacenamos las reservas localmente para el funcionamiento del sistema</li>
             </ul>
 
             <button class="close-legal-btn" onclick="cerrarCookies()">Cerrar</button>
         </div>
     </div>
 
-    <a href="https://wa.me/34669670985?text=Hola%2C%20me%20gustar%C3%ADa%20hacer%20una%20reserva%20en%20Restaurante%20La%20Clave" 
+    <a href="https://wa.me/34669670985?text=Hola%2C%20me%20gustar%C3%ADa%20hacer%20una%20reserva" 
        class="whatsapp-float" 
        target="_blank" 
        rel="noopener noreferrer"
@@ -1721,7 +1753,7 @@
                 limpiarReservasExpiradas();
                 cargarDatosAdmin();
             } else {
-                alert('❌ PIN incorrecto. Intenta de nuevo.');
+                alert('❌ PIN incorrecto');
                 document.getElementById('pinInput').value = '';
                 document.getElementById('pinInput').focus();
             }
@@ -1769,10 +1801,10 @@
             return ocupacion;
         }
 
-        function calcularOcupacionDia(fecha) {
-            const mediodia = calcularOcupacion(fecha, 'mediodia');
-            const noche = calcularOcupacion(fecha, 'noche');
-            return mediodia + noche;
+        function obtenerEstadoTurno(ocupacion) {
+            if (ocupacion >= UMBRAL_ROJO) return 'full';
+            if (ocupacion >= UMBRAL_NARANJA) return 'partial';
+            return 'available';
         }
 
         function actualizarHorasDisponibles() {
@@ -1790,10 +1822,10 @@
             const disponibleNoche = CAPACIDAD_NOCHE - ocupacionNoche;
 
             const mediodia = document.createElement('optgroup');
-            mediodia.label = `Mediodía (${disponibleMediodia}/${CAPACIDAD_MEDIODIA} personas confirmadas)`;
+            mediodia.label = `Mediodía (${disponibleMediodia}/${CAPACIDAD_MEDIODIA} confirmadas)`;
 
             const cena = document.createElement('optgroup');
-            cena.label = `Cena (${disponibleNoche}/${CAPACIDAD_NOCHE} personas confirmadas)`;
+            cena.label = `Cena (${disponibleNoche}/${CAPACIDAD_NOCHE} confirmadas)`;
 
             if (disponibleMediodia > 0) {
                 ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30'].forEach(hora => {
@@ -1818,7 +1850,7 @@
             if (disponibleMediodia === 0 && disponibleNoche === 0) {
                 const option = document.createElement('option');
                 option.value = '';
-                option.textContent = 'Sin disponibilidad este día';
+                option.textContent = 'Sin disponibilidad';
                 option.disabled = true;
                 horaSelect.appendChild(option);
             }
@@ -1843,9 +1875,9 @@
             const disponible = capacidad - ocupacion;
 
             if (personasVal === 'mas8') {
-                infoDiv.innerHTML = '<div class="availability-info warning">⚠️ Para grupos grandes, confirmaremos disponibilidad por WhatsApp</div>';
+                infoDiv.innerHTML = '<div class="availability-info warning">⚠️ Para grupos grandes, confirmaremos por WhatsApp</div>';
             } else if (personas > disponible) {
-                infoDiv.innerHTML = '<div class="availability-info full">❌ No hay suficientes plazas confirmadas</div>';
+                infoDiv.innerHTML = '<div class="availability-info full">❌ No hay plazas suficientes</div>';
             } else if (disponible - personas < 5) {
                 infoDiv.innerHTML = '<div class="availability-info warning">⚠️ Quedan pocas plazas: ' + disponible + '/' + capacidad + '</div>';
             } else {
@@ -1857,10 +1889,17 @@
             event.preventDefault();
 
             const nombre = document.getElementById('nombre').value;
+            const prefijo = document.getElementById('prefijo').value;
+            const telefono = document.getElementById('telefono').value;
             const fecha = document.getElementById('fecha').value;
             const hora = document.getElementById('hora').value;
             const personasVal = document.getElementById('personas').value;
             const comentarios = document.getElementById('comentarios').value;
+
+            if (telefono.length !== 9 || !/^[0-9]{9}$/.test(telefono)) {
+                alert('❌ El teléfono debe tener exactamente 9 dígitos');
+                return;
+            }
 
             if (personasVal !== 'mas8') {
                 const personas = parseInt(personasVal);
@@ -1871,7 +1910,7 @@
                 const disponible = capacidad - ocupacion;
 
                 if (personas > disponible) {
-                    alert('❌ Lo sentimos, no hay suficientes plazas confirmadas.');
+                    alert('❌ No hay plazas suficientes confirmadas');
                     return;
                 }
             }
@@ -1880,6 +1919,7 @@
             reservas.push({
                 id: Date.now(),
                 nombre: nombre,
+                telefono: prefijo + telefono,
                 fecha: fecha,
                 hora: hora,
                 personas: personasVal,
@@ -1890,11 +1930,11 @@
             guardarReservas(reservas);
 
             const fechaObj = new Date(fecha + 'T00:00:00');
-            const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const fechaFormateada = fechaObj.toLocaleDateString('es-ES', opciones);
+            const fechaFormateada = fechaObj.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
             let mensaje = `¡Hola! Me gustaría hacer una reserva:%0A%0A`;
             mensaje += `👤 Nombre: ${nombre}%0A`;
+            mensaje += `☎️ Teléfono: ${prefijo} ${telefono}%0A`;
             mensaje += `📅 Fecha: ${fechaFormateada}%0A`;
             mensaje += `🕐 Hora: ${hora}%0A`;
             mensaje += `👥 Personas: ${personasVal === 'mas8' ? 'Más de 8' : personasVal}%0A`;
@@ -1906,7 +1946,7 @@
             window.open(`https://wa.me/34669670985?text=${mensaje}`, '_blank');
 
             document.getElementById('reservaForm').reset();
-            document.getElementById('availabilityInfo').innerHTML = '<div class="availability-info">✅ Reserva enviada (quedará pendiente hasta confirmar)</div>';
+            document.getElementById('availabilityInfo').innerHTML = '<div class="availability-info">✅ Reserva enviada (pendiente de confirmar)</div>';
         }
 
         function confirmarReserva(id) {
@@ -1954,25 +1994,35 @@
                 fecha.setDate(hoy.getDate() + i);
                 const fechaStr = fecha.toISOString().split('T')[0];
 
-                const totalPersonas = calcularOcupacionDia(fechaStr);
+                const ocupacionMediodia = calcularOcupacion(fechaStr, 'mediodia');
+                const ocupacionNoche = calcularOcupacion(fechaStr, 'noche');
 
-                let clase = 'available';
-                if (totalPersonas >= UMBRAL_ROJO) {
-                    clase = 'full';
-                } else if (totalPersonas >= UMBRAL_NARANJA) {
-                    clase = 'partial';
-                }
-
-                if (i === 0) clase = 'past';
+                const estadoMediodia = obtenerEstadoTurno(ocupacionMediodia);
+                const estadoNoche = obtenerEstadoTurno(ocupacionNoche);
 
                 const div = document.createElement('div');
-                div.className = `calendar-day ${clase}`;
+                div.className = 'calendar-day-card';
                 div.setAttribute('data-fecha', fechaStr);
                 div.onclick = function() { mostrarReservasDia(fechaStr); };
+
+                let emojiMediodia = estadoMediodia === 'full' ? '🔴' : estadoMediodia === 'partial' ? '🟠' : '🟢';
+                let emojiNoche = estadoNoche === 'full' ? '🔴' : estadoNoche === 'partial' ? '🟠' : '🟢';
+
                 div.innerHTML = `
-                    <strong>${fecha.getDate()}</strong><br>
-                    <small>${fecha.toLocaleDateString('es-ES', { weekday: 'short' })}</small><br>
-                    <small>${totalPersonas} conf.</small>
+                    <div class="calendar-day-header">
+                        <strong>${fecha.getDate()}</strong>
+                        <small>${fecha.toLocaleDateString('es-ES', { weekday: 'short', month: 'short' })}</small>
+                    </div>
+                    <div class="calendar-turnos">
+                        <div class="turno-status ${estadoMediodia}">
+                            ${emojiMediodia} COMIDA<br>
+                            <small>${ocupacionMediodia}/${CAPACIDAD_MEDIODIA}</small>
+                        </div>
+                        <div class="turno-status ${estadoNoche}">
+                            ${emojiNoche} CENA<br>
+                            <small>${ocupacionNoche}/${CAPACIDAD_NOCHE}</small>
+                        </div>
+                    </div>
                 `;
 
                 grid.appendChild(div);
@@ -1980,7 +2030,7 @@
         }
 
         function mostrarReservasDia(fecha) {
-            document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+            document.querySelectorAll('.calendar-day-card').forEach(d => d.classList.remove('selected'));
             document.querySelector(`[data-fecha="${fecha}"]`).classList.add('selected');
 
             const fechaObj = new Date(fecha + 'T00:00:00');
@@ -2019,7 +2069,7 @@
                             <div class="reservation-mini ${estadoClass}">
                                 <div>
                                     <strong>${r.hora} - ${r.nombre}</strong>
-                                    <small>👥 ${personasTexto} personas ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
+                                    <small>☎️ ${r.telefono} | 👥 ${personasTexto} ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
                                 </div>
                                 <div class="reservation-actions">
                                     ${estadoBadge}
@@ -2050,7 +2100,7 @@
                             <div class="reservation-mini ${estadoClass}">
                                 <div>
                                     <strong>${r.hora} - ${r.nombre}</strong>
-                                    <small>👥 ${personasTexto} personas ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
+                                    <small>☎️ ${r.telefono} | 👥 ${personasTexto} ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
                                 </div>
                                 <div class="reservation-actions">
                                     ${estadoBadge}
@@ -2073,7 +2123,7 @@
             });
 
             if (reservas.length === 0) {
-                lista.innerHTML = '<p style="text-align: center; color: #999;">No hay reservas aún</p>';
+                lista.innerHTML = '<p style="text-align: center; color: #999;">No hay reservas</p>';
                 return;
             }
 
@@ -2082,7 +2132,7 @@
                 const fechaObj = new Date(r.fecha + 'T00:00:00');
                 const fechaFormateada = fechaObj.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
 
-                const personasTexto = r.personas === 'mas8' ? 'Más de 8 personas' : r.personas + ' personas';
+                const personasTexto = r.personas === 'mas8' ? 'Más de 8' : r.personas;
                 const estadoClass = r.estado === 'pendiente' ? 'pendiente' : 'confirmada';
                 const estadoBadge = r.estado === 'pendiente' 
                     ? '<span class="estado-badge pendiente">🟡 PENDIENTE</span>' 
@@ -2096,7 +2146,7 @@
                 div.innerHTML = `
                     <div class="reservation-info">
                         <strong>${r.nombre} - ${fechaFormateada} a las ${r.hora}</strong>
-                        <small>👥 ${personasTexto} ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
+                        <small>☎️ ${r.telefono} | 👥 ${personasTexto} ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
                     </div>
                     <div class="reservation-actions">
                         ${estadoBadge}
@@ -2131,10 +2181,20 @@
         function guardarReservaManual(event) {
             event.preventDefault();
 
+            const telefono = document.getElementById('manualTelefono').value;
+            if (telefono && (telefono.length !== 9 || !/^[0-9]{9}$/.test(telefono))) {
+                alert('❌ El teléfono debe tener 9 dígitos');
+                return;
+            }
+
             const reservas = obtenerReservas();
+            const prefijo = document.getElementById('manualPrefijo').value;
+            const telefonoCompleto = telefono ? prefijo + telefono : '';
+
             reservas.push({
                 id: Date.now(),
                 nombre: document.getElementById('manualNombre').value,
+                telefono: telefonoCompleto,
                 fecha: document.getElementById('manualFecha').value,
                 hora: document.getElementById('manualHora').value,
                 personas: document.getElementById('manualPersonas').value,
