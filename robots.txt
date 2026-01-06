@@ -1,0 +1,30 @@
+# robots.txt para Restaurante La Clave
+# https://www.restaurantelaclave.es/robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://www.restaurantelaclave.es/sitemap.xml
+
+# Crawl-delay (opcional, para no sobrecargar el servidor)
+Crawl-delay: 10
+
+# Bloquear acceso a archivos y carpetas privadas (si las hubiera)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /cgi-bin/
+Disallow: /*.pdf$
+
+# Permitir específicamente a los principales bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
