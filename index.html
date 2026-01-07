@@ -4,1362 +4,181 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    
+
     <title>Restaurante La Clave Daimiel | Cocina Manchega Casera y Tradicional</title>
     <meta name="description" content="Restaurante La Clave en Daimiel, Ciudad Real. Cocina casera manchega con productos locales. Especialidades: arroz con bogavante, pisto manchego, carpaccio de bacalao. Reservas: 669 67 09 85">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
-    
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        body {
-            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            overflow-x: hidden;
-        }
-        
-        h1, h2 {
-            font-family: 'Halyard Display', 'Montserrat', sans-serif;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-        
-        h3, h4 {
-            font-family: 'Futura', 'Century Gothic', sans-serif;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
-        
-        header {
-            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
-            color: white;
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 1rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        
-        .logo {
-            font-family: 'Halyard Display', 'Montserrat', sans-serif;
-            font-size: clamp(1.3rem, 4vw, 1.8rem);
-            font-weight: 800;
-            letter-spacing: 3px;
-            animation: fadeInDown 0.8s ease-out;
-        }
-        
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: clamp(0.5rem, 2vw, 2rem);
-            flex-wrap: nowrap;
-            align-items: center;
-        }
-        
-        .nav-links li {
-            opacity: 0;
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #333; overflow-x: hidden; }
+        h1, h2 { font-family: 'Halyard Display', 'Montserrat', sans-serif; font-weight: 700; letter-spacing: -0.5px; }
+        h3, h4 { font-family: 'Futura', 'Century Gothic', sans-serif; font-weight: 400; letter-spacing: 0.5px; }
+
+        header { background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%); color: white; padding: 1rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem; flex-wrap: wrap; gap: 0.5rem; }
+        .logo { font-family: 'Halyard Display', 'Montserrat', sans-serif; font-size: clamp(1.3rem, 4vw, 1.8rem); font-weight: 800; letter-spacing: 3px; animation: fadeInDown 0.8s ease-out; }
+        .nav-links { display: flex; list-style: none; gap: clamp(0.5rem, 2vw, 2rem); flex-wrap: nowrap; align-items: center; }
+        .nav-links li { opacity: 0; animation: fadeInUp 0.6s ease-out forwards; }
         .nav-links li:nth-child(1) { animation-delay: 0.1s; }
         .nav-links li:nth-child(2) { animation-delay: 0.2s; }
         .nav-links li:nth-child(3) { animation-delay: 0.3s; }
         .nav-links li:nth-child(4) { animation-delay: 0.4s; }
         .nav-links li:nth-child(5) { animation-delay: 0.5s; }
-        
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: clamp(0.8rem, 2vw, 1.05rem);
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 0.5rem clamp(0.3rem, 1.5vw, 1rem);
-            border-radius: 5px;
-            display: block;
-            white-space: nowrap;
-        }
-        
-        .nav-links a::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: #FFD700;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-        
-        .nav-links a:hover {
-            color: #FFD700;
-            background: rgba(255, 215, 0, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        .nav-links a:hover::before {
-            width: 80%;
-        }
-        
-        .admin-btn-float {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            background: rgba(139, 69, 19, 0.95);
-            color: white;
-            padding: 0.7rem 1.5rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-            border: 2px solid #FFD700;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            opacity: 1;
-        }
-        
-        .admin-btn-float:hover {
-            background: rgba(160, 82, 45, 0.95);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-        }
-        
-        .admin-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            z-index: 10002;
-            overflow-y: auto;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .admin-modal.show {
-            display: block;
-        }
-        
-        .admin-modal-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            color: white;
-        }
-        
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid rgba(255,215,0,0.3);
-        }
-        
-        .admin-header h2 {
-            color: white;
-            font-size: 2rem;
-        }
-        
-        .close-admin-btn {
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .close-admin-btn:hover {
-            background: rgba(255,255,255,0.1);
-            transform: scale(1.05);
-        }
-        
-        .admin-login {
-            max-width: 400px;
-            margin: 0 auto;
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-top: 5rem;
-        }
-        
-        .admin-login h3 {
-            color: #8B4513;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        
-        .pin-input {
-            width: 100%;
-            padding: 1rem;
-            font-size: 1.5rem;
-            text-align: center;
-            letter-spacing: 1rem;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-        }
-        
-        .admin-content {
-            display: none;
-        }
-        
-        .admin-content.active {
-            display: block;
-        }
-        
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        
-        .stat-card h3 {
-            color: #8B4513;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-card p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .stat-card.warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-        }
-        
-        .stat-card.warning h3 {
-            color: #ff9800;
-        }
-        
-        .calendar-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
-        }
-        
-        .calendar-day-card {
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .calendar-day-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-        
-        .calendar-day-card.selected {
-            border: 3px solid #FFD700;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-        }
-        
-        .calendar-day-header {
-            background: #8B4513;
-            color: white;
-            padding: 0.5rem;
-            text-align: center;
-            font-weight: 600;
-        }
-        
-        .calendar-day-header strong {
-            font-size: 1.3rem;
-            display: block;
-        }
-        
-        .calendar-day-header small {
-            font-size: 0.8rem;
-            opacity: 0.9;
-        }
-        
-        .calendar-turnos {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .turno-status {
-            padding: 1rem 0.5rem;
-            text-align: center;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .turno-status:last-child {
-            border-bottom: none;
-        }
-        
-        .turno-status.available {
-            background: #c8e6c9;
-            color: #1b5e20;
-        }
-        
-        .turno-status.partial {
-            background: #ffe0b2;
-            color: #e65100;
-        }
-        
-        .turno-status.full {
-            background: #ffcdd2;
-            color: #c62828;
-        }
-        
-        .turno-status.past {
-            background: #f5f5f5;
-            color: #999;
-        }
-        
-        .day-reservations {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-            display: none;
-        }
-        
-        .day-reservations.show {
-            display: block;
-        }
-        
-        .day-reservations h3 {
-            color: #8B4513;
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-        }
-        
-        .turno-section {
-            margin-bottom: 2rem;
-        }
-        
-        .turno-section h4 {
-            color: #8B4513;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #FFD700;
-        }
-        
-        .reservation-mini {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            border-left: 4px solid #8B4513;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .reservation-mini.pendiente {
-            background: #fff8e1;
-            border-left-color: #ff9800;
-        }
-        
-        .reservation-mini.confirmada {
-            background: #e8f5e9;
-            border-left-color: #4caf50;
-        }
-        
-        .reservation-mini strong {
-            color: #8B4513;
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-        
-        .reservation-mini small {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .estado-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        
-        .estado-badge.pendiente {
-            background: #fff3cd;
-            color: #ff9800;
-            border: 1px solid #ff9800;
-        }
-        
-        .estado-badge.confirmada {
-            background: #d4edda;
-            color: #28a745;
-            border: 1px solid #28a745;
-        }
-        
-        .confirm-btn {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
-        }
-        
-        .confirm-btn:hover {
-            background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
-        }
-        
-        .no-reservations {
-            color: #999;
-            font-style: italic;
-            text-align: center;
-            padding: 1rem;
-        }
-        
-        .reservations-list {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .reservation-item {
-            padding: 1rem;
-            border-left: 4px solid #8B4513;
-            background: #ffffff;
-            margin-bottom: 1rem;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .reservation-item.pendiente {
-            background: #fff8e1;
-            border-left-color: #ff9800;
-        }
-        
-        .reservation-item.confirmada {
-            background: #e8f5e9;
-            border-left-color: #4caf50;
-        }
-        
-        .reservation-info {
-            flex: 1;
-            color: #333;
-        }
-        
-        .reservation-info strong {
-            color: #8B4513;
-            font-size: 1.1rem;
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-        
-        .reservation-info small {
-            color: #666;
-            font-size: 0.95rem;
-        }
-        
-        .reservation-actions {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .delete-btn {
-            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-            color: white;
-            border: none;
-            padding: 0.7rem 1.2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-            box-shadow: 0 4px 10px rgba(244, 67, 54, 0.3);
-        }
-        
-        .delete-btn:hover {
-            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(244, 67, 54, 0.4);
-        }
-        
-        .add-manual-btn {
-            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 2rem;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .add-manual-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(139, 69, 19, 0.4);
-        }
-        
-        .submit-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #25D366 0%, #20BA5A 100%);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-size: clamp(1rem, 2.5vw, 1.1rem);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-        
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
-        }
-        
-        .cancel-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-size: clamp(1rem, 2.5vw, 1.1rem);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            box-shadow: 0 4px 10px rgba(244, 67, 54, 0.3);
-        }
-        
-        .cancel-btn:hover {
-            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(244, 67, 54, 0.4);
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 10003;
-            overflow-y: auto;
-        }
-        
-        .modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            max-width: 600px;
-            width: 90%;
-            margin: 2rem;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .phone-group {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .prefix-select {
-            width: 120px;
-            padding: 0.8rem 0.5rem;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: clamp(0.95rem, 2vw, 1rem);
-            font-family: inherit;
-            transition: border-color 0.3s;
-        }
-        
-        .prefix-select:focus {
-            outline: none;
-            border-color: #8B4513;
-        }
-        
-        .phone-input {
-            flex: 1;
-        }
+        .nav-links a { color: white; text-decoration: none; font-size: clamp(0.8rem, 2vw, 1.05rem); font-weight: 500; transition: all 0.3s ease; position: relative; padding: 0.5rem clamp(0.3rem, 1.5vw, 1rem); border-radius: 5px; display: block; white-space: nowrap; }
+        .nav-links a::before { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: #FFD700; transition: all 0.3s ease; transform: translateX(-50%); }
+        .nav-links a:hover { color: #FFD700; background: rgba(255, 215, 0, 0.1); transform: translateY(-2px); }
+        .nav-links a:hover::before { width: 80%; }
 
-        /* NUEVO: Gestión de imagen de menú diario */
-        .menu-preview-container {
-            text-align: center;
-            margin-top: 2rem;
-            border: 3px dashed #8B4513;
-            padding: 1rem;
-            border-radius: 15px;
-            background: #fff;
-        }
-        .menu-img-display {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            display: none;
-            margin-top: 1rem;
-        }
-        .no-menu-msg {
-            padding: 1.5rem 1rem;
-            color: #777;
-            font-style: italic;
-            font-size: 0.95rem;
-        }
-        .admin-upload-section {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            border: 2px solid #8B4513;
-        }
-        .upload-label {
-            display: block;
-            background: #8B4513;
-            color: white;
-            padding: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            margin-bottom: 1rem;
-            transition: 0.3s;
-            font-weight: 600;
-        }
-        .upload-label:hover {
-            background: #A0522D;
-        }
-        input[type="file"] {
-            display: none;
-        }
-        
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .hero {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                        url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600&q=80');
-            background-size: cover;
-            background-position: center;
-            min-height: 500px;
-            height: 70vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            padding: 2rem;
-        }
-        
-        .hero-content h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-            font-weight: 800;
-        }
-        
-        .hero-content p {
-            font-size: clamp(1.1rem, 3vw, 1.5rem);
-            margin-bottom: 2rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .cta-button {
-            background: #FFD700;
-            color: #333;
-            padding: 1rem 2.5rem;
-            text-decoration: none;
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            font-weight: 600;
-            border-radius: 50px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: inline-block;
-        }
-        
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(255,215,0,0.4);
-        }
-        
-        section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
-            scroll-margin-top: 80px;
-        }
-        
-        h2 {
-            font-size: clamp(2.2rem, 5vw, 2.8rem);
-            color: #8B4513;
-            margin-bottom: 2rem;
-            text-align: center;
-            position: relative;
-            padding-bottom: 1rem;
-        }
-        
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 3px;
-            background: #FFD700;
-        }
-        
-        .reserva {
-            background: linear-gradient(135deg, #FFF8DC 0%, #FAEBD7 100%);
-        }
-        
-        .reserva-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: clamp(2rem, 4vw, 3rem);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #8B4513;
-            font-weight: 600;
-            font-size: clamp(1rem, 2.5vw, 1.1rem);
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: clamp(0.95rem, 2vw, 1rem);
-            font-family: inherit;
-            transition: border-color 0.3s;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #8B4513;
-        }
-        
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        
-        .info-box {
-            background: #FFF8DC;
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            border-left: 4px solid #FFD700;
-        }
-        
-        .info-box p {
-            font-size: clamp(0.9rem, 2vw, 0.95rem);
-            color: #666;
-            margin: 0;
-            line-height: 1.6;
-        }
-        
-        .availability-info {
-            background: #e8f5e9;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-            color: #2e7d32;
-            font-weight: 600;
-        }
-        
-        .availability-info.warning {
-            background: #fff3e0;
-            color: #e65100;
-        }
-        
-        .availability-info.full {
-            background: #ffebee;
-            color: #c62828;
-        }
-        
-        .especialidades-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .plato-card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        
-        .plato-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-        
-        .plato-imagen {
-            height: 250px;
-            background: #f5f5f5;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .plato-imagen img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            transition: transform 0.3s;
-        }
-        
-        .plato-card:hover .plato-imagen img {
-            transform: scale(1.05);
-        }
-        
-        .plato-info {
-            padding: 1.5rem;
-        }
-        
-        .plato-info h3 {
-            color: #8B4513;
-            margin-bottom: 0.5rem;
-            font-size: clamp(1.3rem, 3vw, 1.5rem);
-        }
-        
-        .plato-info p {
-            color: #666;
-            font-size: clamp(1rem, 2.5vw, 1rem);
-            line-height: 1.6;
-        }
-        
-        .menu {
-            background: #FFF8DC;
-        }
-        
-        .menu-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-            gap: 3rem;
-            margin-top: 2rem;
-        }
-        
-        .menu-box {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .menu-box h3 {
-            color: #8B4513;
-            font-size: clamp(1.5rem, 3.5vw, 1.9rem);
-            margin-bottom: 1rem;
-            border-bottom: 2px solid #FFD700;
-            padding-bottom: 0.5rem;
-        }
-        
-        .precio {
-            font-family: 'Halyard Display', 'Montserrat', sans-serif;
-            font-size: clamp(1.8rem, 4vw, 2.2rem);
-            color: #FFD700;
-            font-weight: 700;
-            margin: 1rem 0;
-        }
-        
-        .menu-items {
-            list-style: none;
-            margin-top: 1rem;
-        }
-        
-        .menu-items li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
-            position: relative;
-            font-size: clamp(1rem, 2.5vw, 1.05rem);
-        }
-        
-        .menu-items li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: #8B4513;
-            font-weight: bold;
-        }
-        
-        .contacto-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-            gap: 3rem;
-            margin-top: 2rem;
-        }
-        
-        .contacto-info {
-            background: #FFF8DC;
-            padding: clamp(1.5rem, 3vw, 2rem);
-            border-radius: 10px;
-        }
-        
-        .info-item {
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: start;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .info-item strong {
-            font-family: 'Futura', 'Century Gothic', sans-serif;
-            color: #8B4513;
-            font-size: clamp(1.1rem, 3vw, 1.2rem);
-            min-width: 120px;
-        }
-        
-        .info-item span {
-            font-size: clamp(1rem, 2.5vw, 1.05rem);
-            flex: 1;
-        }
-        
-        .horarios {
-            background: white;
-            padding: clamp(1.5rem, 3vw, 2rem);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .horarios h3 {
-            color: #8B4513;
-            margin-bottom: 1rem;
-            font-size: clamp(1.4rem, 3.5vw, 1.7rem);
-        }
-        
-        .horarios p {
-            margin-bottom: 0.8rem;
-            font-size: clamp(1rem, 2.5vw, 1.1rem);
-            line-height: 1.7;
-        }
-        
-        .mapa-container {
-            margin-top: 3rem;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .mapa-container iframe {
-            width: 100%;
-            height: 400px;
-            border: none;
-        }
-        
-        .whatsapp-float {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #25D366;
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            cursor: pointer;
-            transition: transform 0.3s;
-            z-index: 1000;
-            text-decoration: none;
-        }
-        
-        .whatsapp-float:hover {
-            transform: scale(1.1);
-        }
-        
-        .whatsapp-float svg {
-            width: 32px;
-            height: 32px;
-            fill: white;
-        }
-        
-        footer {
-            background: #8B4513;
-            color: white;
-            text-align: center;
-            padding: 2rem 1rem;
-        }
-        
-        footer p {
-            font-size: clamp(0.9rem, 2vw, 1rem);
-            margin-bottom: 0.5rem;
-        }
-        
-        .footer-links {
-            margin-top: 1rem;
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .footer-links a {
-            color: #FFD700;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: opacity 0.3s;
-        }
-        
-        .footer-links a:hover {
-            opacity: 0.8;
-            text-decoration: underline;
-        }
-        
-        .legal-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 10004;
-            overflow-y: auto;
-        }
-        
-        .legal-modal.show {
-            display: flex;
-            align-items: start;
-            justify-content: center;
-            padding: 2rem 0;
-        }
-        
-        .legal-content {
-            background: white;
-            padding: 3rem;
-            border-radius: 15px;
-            max-width: 800px;
-            width: 90%;
-            margin: 2rem;
-        }
-        
-        .legal-content h2 {
-            color: #8B4513;
-            margin-bottom: 2rem;
-        }
-        
-        .legal-content h3 {
-            color: #8B4513;
-            font-size: 1.3rem;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .legal-content p {
-            color: #333;
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-        
-        .legal-content ul {
-            margin-left: 2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .legal-content ul li {
-            margin-bottom: 0.5rem;
-            color: #666;
-        }
-        
-        .close-legal-btn {
-            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
-            color: white;
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: block;
-            margin: 2rem auto 0;
-        }
-        
-        .close-legal-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(139, 69, 19, 0.4);
-        }
-        
-        /* RESPONSIVE - MÓVIL */
+        .admin-btn-float { position: fixed; bottom: 30px; left: 30px; background: rgba(139, 69, 19, 0.95); color: white; padding: 0.7rem 1.5rem; border-radius: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.3s ease; border: 2px solid #FFD700; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; opacity: 1; }
+        .admin-btn-float:hover { background: rgba(160, 82, 45, 0.95); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+
+        .admin-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); z-index: 10002; overflow-y: auto; animation: fadeIn 0.3s ease; }
+        .admin-modal.show { display: block; }
+        .admin-modal-content { max-width: 1200px; margin: 0 auto; padding: 2rem; color: white; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid rgba(255,215,0,0.3); }
+        .admin-header h2 { color: white; font-size: 2rem; }
+        .close-admin-btn { background: transparent; border: 2px solid white; color: white; padding: 0.8rem 1.5rem; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .close-admin-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); }
+
+        .admin-login { max-width: 400px; margin: 0 auto; background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-top: 5rem; }
+        .admin-login h3 { color: #8B4513; margin-bottom: 1.5rem; text-align: center; }
+        .pin-input { width: 100%; padding: 1rem; font-size: 1.5rem; text-align: center; letter-spacing: 1rem; border: 2px solid #ddd; border-radius: 10px; margin-bottom: 1rem; }
+        .admin-content { display: none; }
+        .admin-content.active { display: block; }
+
+        .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
+        .stat-card h3 { color: #8B4513; font-size: 2rem; margin-bottom: 0.5rem; }
+        .stat-card p { color: #666; font-size: 0.9rem; }
+        .stat-card.warning { background: #fff3cd; border-left: 4px solid #ffc107; }
+        .stat-card.warning h3 { color: #ff9800; }
+
+        .admin-upload-section { background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; border: 2px solid #8B4513; }
+        .upload-label { display: block; background: #8B4513; color: white; padding: 1rem; border-radius: 8px; cursor: pointer; text-align: center; margin-bottom: 1rem; transition: 0.3s; font-weight: 600; }
+        .upload-label:hover { background: #A0522D; }
+        .upload-label.uploading { background: #666; cursor: wait; }
+        input[type="file"] { display: none; }
+
+        .menu-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .menu-gallery-item { position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.3s; }
+        .menu-gallery-item:hover { transform: scale(1.05); }
+        .menu-gallery-item img { width: 100%; height: 150px; object-fit: cover; display: block; }
+        .menu-gallery-item .delete-img-btn { position: absolute; top: 5px; right: 5px; background: #f44336; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .menu-gallery-item .delete-img-btn:hover { background: #d32f2f; }
+        .menu-gallery-item .active-badge { position: absolute; top: 5px; left: 5px; background: #4caf50; color: white; padding: 0.3rem 0.6rem; border-radius: 5px; font-size: 0.75rem; font-weight: 600; }
+        .no-menus-msg { text-align: center; padding: 2rem; color: #999; font-style: italic; }
+
+        .calendar-container { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; }
+
+        .calendar-day-card { border: 2px solid #ddd; border-radius: 10px; overflow: hidden; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .calendar-day-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        .calendar-day-card.selected { border: 3px solid #FFD700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+
+        .calendar-day-header { background: #8B4513; color: white; padding: 0.5rem; text-align: center; font-weight: 600; }
+        .calendar-day-header strong { font-size: 1.3rem; display: block; }
+        .calendar-day-header small { font-size: 0.8rem; opacity: 0.9; }
+
+        .calendar-turnos { display: flex; flex-direction: column; }
+        .turno-status { padding: 1rem 0.5rem; text-align: center; font-size: 0.85rem; font-weight: 600; border-bottom: 1px solid #ddd; }
+        .turno-status:last-child { border-bottom: none; }
+        .turno-status.available { background: #c8e6c9; color: #1b5e20; }
+        .turno-status.partial { background: #ffe0b2; color: #e65100; }
+        .turno-status.full { background: #ffcdd2; color: #c62828; }
+
+        .day-reservations { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 2rem; display: none; }
+        .day-reservations.show { display: block; }
+        .day-reservations h3 { color: #8B4513; margin-bottom: 1.5rem; font-size: 1.5rem; }
+
+        .turno-section { margin-bottom: 2rem; }
+        .turno-section h4 { color: #8B4513; font-size: 1.2rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #FFD700; }
+
+        .reservation-mini { background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; border-left: 4px solid #8B4513; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+        .reservation-mini.pendiente { background: #fff8e1; border-left-color: #ff9800; }
+        .reservation-mini.confirmada { background: #e8f5e9; border-left-color: #4caf50; }
+
+        .estado-badge { padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+        .estado-badge.pendiente { background: #fff3cd; color: #ff9800; border: 1px solid #ff9800; }
+        .estado-badge.confirmada { background: #d4edda; color: #28a745; border: 1px solid #28a745; }
+
+        .confirm-btn { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border: none; padding: 0.5rem 1rem; border-radius: 50px; cursor: pointer; transition: all 0.3s; font-weight: 600; font-size: 0.85rem; box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3); }
+        .confirm-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4); }
+
+        .reservations-list { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .reservation-item { padding: 1rem; border-left: 4px solid #8B4513; background: #ffffff; margin-bottom: 1rem; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .reservation-item.pendiente { background: #fff8e1; border-left-color: #ff9800; }
+        .reservation-item.confirmada { background: #e8f5e9; border-left-color: #4caf50; }
+
+        .delete-btn { background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 50px; cursor: pointer; transition: all 0.3s; font-weight: 600; box-shadow: 0 4px 10px rgba(244, 67, 54, 0.3); }
+        .delete-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(244, 67, 54, 0.4); }
+
+        .add-manual-btn { background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%); color: white; padding: 1rem 2rem; border: none; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-bottom: 2rem; display: block; margin-left: auto; margin-right: auto; }
+        .add-manual-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(139, 69, 19, 0.4); }
+
+        .submit-btn { width: 100%; background: linear-gradient(135deg, #25D366 0%, #20BA5A 100%); color: white; padding: 1rem 2rem; border: none; border-radius: 50px; font-size: clamp(1rem, 2.5vw, 1.1rem); font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
+        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4); }
+        .cancel-btn { width: 100%; background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); color: white; padding: 1rem 2rem; border: none; border-radius: 50px; font-size: clamp(1rem, 2.5vw, 1.1rem); font-weight: 600; cursor: pointer; transition: all 0.3s; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10003; overflow-y: auto; }
+        .modal.show { display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 2rem; border-radius: 15px; max-width: 600px; width: 90%; margin: 2rem; max-height: 90vh; overflow-y: auto; }
+
+        .phone-group { display: flex; gap: 0.5rem; }
+        .prefix-select { width: 120px; padding: 0.8rem 0.5rem; border: 2px solid #ddd; border-radius: 8px; font-size: clamp(0.95rem, 2vw, 1rem); font-family: inherit; transition: border-color 0.3s; }
+        .phone-input { flex: 1; }
+
+        .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: white; animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .hero { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600&q=80'); background-size: cover; background-position: center; min-height: 500px; height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; padding: 2rem; }
+        .hero-content h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); font-weight: 800; }
+        .hero-content p { font-size: clamp(1.1rem, 3vw, 1.5rem); margin-bottom: 2rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.7); max-width: 600px; margin-left: auto; margin-right: auto; }
+        .cta-button { background: #FFD700; color: #333; padding: 1rem 2.5rem; text-decoration: none; font-size: clamp(1rem, 2.5vw, 1.2rem); font-weight: 600; border-radius: 50px; transition: transform 0.3s, box-shadow 0.3s; display: inline-block; }
+        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255,215,0,0.4); }
+
+        section { max-width: 1200px; margin: 0 auto; padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem); scroll-margin-top: 80px; }
+        h2 { font-size: clamp(2.2rem, 5vw, 2.8rem); color: #8B4513; margin-bottom: 2rem; text-align: center; position: relative; padding-bottom: 1rem; }
+        h2::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100px; height: 3px; background: #FFD700; }
+
+        .reserva { background: linear-gradient(135deg, #FFF8DC 0%, #FAEBD7 100%); }
+        .reserva-container { max-width: 600px; margin: 0 auto; background: white; padding: clamp(2rem, 4vw, 3rem); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #8B4513; font-weight: 600; font-size: clamp(1rem, 2.5vw, 1.1rem); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem 1rem; border: 2px solid #ddd; border-radius: 8px; font-size: clamp(0.95rem, 2vw, 1rem); font-family: inherit; transition: border-color 0.3s; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .menu { background: #FFF8DC; }
+        .menu-preview-container { text-align: center; margin-top: 2rem; border: 3px dashed #8B4513; padding: 1rem; border-radius: 15px; background: #fff; }
+        .menu-img-display { max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: none; margin-top: 1rem; }
+        .no-menu-msg { padding: 1.5rem 1rem; color: #777; font-style: italic; font-size: 0.95rem; }
+
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.3s; z-index: 1000; text-decoration: none; }
+        .whatsapp-float:hover { transform: scale(1.1); }
+
+        footer { background: #8B4513; color: white; text-align: center; padding: 2rem 1rem; }
+
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         @media (max-width: 768px) {
-            .admin-btn-float {
-                bottom: 20px;
-                left: 20px;
-                padding: 0.5rem 1rem;
-                font-size: 0.8rem;
-                gap: 0.3rem;
-            }
-            
-            nav {
-                justify-content: center;
-                text-align: center;
-                padding: 0 0.5rem;
-            }
-            
-            .logo {
-                width: 100%;
-                margin-bottom: 0.5rem;
-                font-size: 1.2rem;
-            }
-            
-            .nav-links {
-                width: 100%;
-                justify-content: center;
-                gap: 0.2rem;
-                flex-wrap: nowrap;
-            }
-            
-            .nav-links a {
-                font-size: 0.7rem;
-                padding: 0.35rem 0.5rem;
-                white-space: nowrap;
-            }
-            
-            .calendar-grid {
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-                gap: 0.5rem;
-            }
-            
-            .turno-status {
-                padding: 0.5rem 0.3rem;
-                font-size: 0.75rem;
-            }
-            
-            .admin-modal-content {
-                padding: 1rem;
-            }
-            
-            .calendar-container {
-                padding: 1rem;
-                margin-bottom: 1rem;
-            }
-            
-            .day-reservations {
-                padding: 1rem;
-            }
-            
-            .day-reservations h3 {
-                font-size: 1.1rem;
-            }
-            
-            .turno-section h4 {
-                font-size: 1rem;
-            }
-            
-            .reservation-mini {
-                padding: 0.7rem;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .reservation-actions {
-                width: 100%;
-                justify-content: flex-start;
-            }
-            
-            .confirm-btn, .delete-btn {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.75rem;
-            }
-            
-            .admin-stats {
-                grid-template-columns: 1fr 1fr;
-                gap: 0.8rem;
-            }
-            
-            .stat-card {
-                padding: 1rem;
-            }
-            
-            .stat-card h3 {
-                font-size: 1.5rem;
-            }
-            
-            .stat-card p {
-                font-size: 0.8rem;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .phone-group {
-                flex-direction: column;
-            }
-            
-            .prefix-select {
-                width: 100%;
-            }
-            
-            .legal-content {
-                padding: 2rem 1.5rem;
-            }
-            
-            .whatsapp-float {
-                bottom: 20px;
-                right: 20px;
-                width: 55px;
-                height: 55px;
-            }
-            
-            .mapa-container iframe {
-                height: 300px;
-            }
+            .form-row { grid-template-columns: 1fr; }
+            .phone-group { flex-direction: column; }
+            .prefix-select { width: 100%; }
+            .calendar-grid { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem; }
+            .menu-gallery { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
         }
     </style>
 </head>
 <body>
-    <button class="admin-btn-float" onclick="abrirModalAdmin()">
-        <span>👤</span>
-        <span>Admin</span>
-    </button>
+    <button class="admin-btn-float" onclick="abrirModalAdmin()"><span>👤</span><span>Admin</span></button>
 
     <div class="admin-modal" id="adminModal">
         <div class="admin-modal-content">
@@ -1367,65 +186,53 @@
                 <h2>👤 Panel de Administración</h2>
                 <button class="close-admin-btn" onclick="cerrarModalAdmin()">✖ Cerrar</button>
             </div>
-            
+
             <div class="admin-login" id="adminLogin">
                 <h3>🔐 Acceso Restringido</h3>
                 <p style="text-align: center; color: #666; margin-bottom: 1rem;">Introduce el PIN de acceso</p>
                 <input type="password" class="pin-input" id="pinInput" maxlength="4" placeholder="••••" onkeypress="if(event.key==='Enter') verificarPIN()">
                 <button type="button" class="submit-btn" onclick="verificarPIN()">Acceder</button>
             </div>
-            
+
             <div class="admin-content" id="adminContent">
                 <div class="admin-stats">
-                    <div class="stat-card warning">
-                        <h3 id="reservasPendientes">0</h3>
-                        <p>🟡 Pendientes de Confirmar</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3 id="reservasConfirmadas">0</h3>
-                        <p>🟢 Confirmadas</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3 id="reservasHoy">0</h3>
-                        <p>Reservas Hoy</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3 id="ingresosEstimados">0€</h3>
-                        <p>Ingresos Estimados</p>
-                    </div>
+                    <div class="stat-card warning"><h3 id="reservasPendientes">0</h3><p>🟡 Pendientes de Confirmar</p></div>
+                    <div class="stat-card"><h3 id="reservasConfirmadas">0</h3><p>🟢 Confirmadas</p></div>
+                    <div class="stat-card"><h3 id="reservasHoy">0</h3><p>Reservas Hoy</p></div>
+                    <div class="stat-card"><h3 id="ingresosEstimados">0€</h3><p>Ingresos Estimados</p></div>
                 </div>
 
-                <!-- NUEVO: Subida de foto de menú desde Admin -->
                 <div class="admin-upload-section">
-                    <h3 style="color:#8B4513; margin-bottom:0.5rem;">📸 Menú del día</h3>
-                    <label for="menuFile" class="upload-label">Subir foto del menú</label>
-                    <input type="file" id="menuFile" accept="image/*" onchange="actualizarFotoMenu(this)">
-                    <p style="font-size:0.85rem; color:#555; margin:0;">
-                        Haz una foto a la pizarra o a la carta del día y se actualizará el menú visible en la web.
+                    <h3 style="color:#8B4513; margin-bottom:1rem;">📸 Gestión de Menús del Día</h3>
+
+                    <label for="menuFile" class="upload-label" id="uploadLabel">
+                        <span id="uploadText">📤 Subir nueva foto del menú</span>
+                    </label>
+                    <input type="file" id="menuFile" accept="image/*" onchange="subirFotoMenu(this)">
+
+                    <p style="font-size:0.85rem; color:#555; margin-bottom:1rem;">
+                        La foto se guarda en la nube y se verá en todos los dispositivos (móvil, tablet, ordenador).
                     </p>
+
+                    <div id="statusMessage" style="display:none; padding:0.8rem; border-radius:5px; margin-bottom:1rem; font-size:0.9rem;"></div>
+
+                    <h4 style="color:#8B4513; margin-top:1.5rem; margin-bottom:0.8rem;">📂 Fotos actuales del menú:</h4>
+                    <div class="menu-gallery" id="menuGallery"></div>
                 </div>
-                
+
                 <button class="add-manual-btn" onclick="abrirModalReserva()">➕ Añadir Reserva Manual</button>
-                
+
                 <div class="calendar-container">
-                    <div class="calendar-header">
-                        <h3 style="color: #8B4513;">📅 Calendario de Reservas</h3>
-                    </div>
+                    <div class="calendar-header"><h3 style="color: #8B4513;">📅 Calendario de Reservas</h3></div>
                     <div class="calendar-grid" id="calendarGrid"></div>
                 </div>
-                
+
                 <div class="day-reservations" id="dayReservations">
                     <h3 id="dayTitle">Reservas del día</h3>
-                    <div class="turno-section">
-                        <h4>🌅 Mediodía</h4>
-                        <div id="reservasMediodia"></div>
-                    </div>
-                    <div class="turno-section">
-                        <h4>🌙 Cena</h4>
-                        <div id="reservasNoche"></div>
-                    </div>
+                    <div class="turno-section"><h4>🌅 Mediodía</h4><div id="reservasMediodia"></div></div>
+                    <div class="turno-section"><h4>🌙 Cena</h4><div id="reservasNoche"></div></div>
                 </div>
-                
+
                 <div class="reservations-list">
                     <h3 style="color: #8B4513; margin-bottom: 1.5rem;">📋 Todas las Reservas</h3>
                     <div id="reservationsList"></div>
@@ -1440,7 +247,6 @@
             <ul class="nav-links">
                 <li><a href="#inicio">Inicio</a></li>
                 <li><a href="#reserva">Reservar</a></li>
-                <li><a href="#especialidades">Especialidades</a></li>
                 <li><a href="#menu">Menú</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
@@ -1460,16 +266,12 @@
     <section id="reserva" class="reserva">
         <h2>🍽️ Reserva tu Mesa</h2>
         <div class="reserva-container">
-            <div class="info-box">
-                <p>📱 <strong>Reserva rápida por WhatsApp</strong> - Completa el formulario y te llevaremos directamente a nuestro WhatsApp con todos los datos listos.</p>
-            </div>
-            
             <form id="reservaForm" onsubmit="enviarReserva(event)">
                 <div class="form-group">
                     <label for="nombre">👤 Nombre completo *</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan García">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="telefono">☎️ Teléfono de contacto *</label>
                     <div class="phone-group">
@@ -1477,316 +279,66 @@
                             <option value="+34" selected>🇪🇸 +34</option>
                             <option value="+33">🇫🇷 +33</option>
                             <option value="+44">🇬🇧 +44</option>
-                            <option value="+49">🇩🇪 +49</option>
-                            <option value="+351">🇵🇹 +351</option>
-                            <option value="+39">🇮🇹 +39</option>
-                            <option value="+1">🇺🇸 +1</option>
-                            <option value="+52">🇲🇽 +52</option>
-                            <option value="+54">🇦🇷 +54</option>
                         </select>
-                        <input type="tel" id="telefono" name="telefono" class="phone-input" required 
-                               placeholder="600123456" pattern="[0-9]{9}" 
-                               title="Introduce 9 dígitos" maxlength="9">
+                        <input type="tel" id="telefono" name="telefono" class="phone-input" required placeholder="600123456" pattern="[0-9]{9}" title="Introduce 9 dígitos" maxlength="9">
                     </div>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="fecha">📅 Fecha *</label>
                         <input type="date" id="fecha" name="fecha" required onchange="actualizarHorasDisponibles()">
                     </div>
-                    
                     <div class="form-group">
                         <label for="hora">🕐 Hora *</label>
-                        <select id="hora" name="hora" required onchange="mostrarDisponibilidad()">
-                            <option value="">Selecciona hora</option>
-                        </select>
+                        <select id="hora" name="hora" required><option value="">Selecciona hora</option></select>
                         <div id="availabilityInfo"></div>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="personas">👥 Número de personas *</label>
-                    <select id="personas" name="personas" required onchange="mostrarDisponibilidad()">
+                    <select id="personas" name="personas" required>
                         <option value="">Selecciona</option>
-                        <option value="1">1 persona</option>
                         <option value="2">2 personas</option>
                         <option value="3">3 personas</option>
                         <option value="4">4 personas</option>
                         <option value="5">5 personas</option>
                         <option value="6">6 personas</option>
-                        <option value="7">7 personas</option>
-                        <option value="8">8 personas</option>
-                        <option value="mas8">Más de 8 personas</option>
+                        <option value="mas8">Más de 8</option>
                     </select>
                 </div>
-                
-                <div class="form-group">
-                    <label for="comentarios">💬 Comentarios adicionales (opcional)</label>
-                    <textarea id="comentarios" name="comentarios" placeholder="Ej: Alergias, menú infantil, celebración especial..."></textarea>
-                </div>
-                
-                <button type="submit" class="submit-btn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                    </svg>
-                    <span>Reservar por WhatsApp</span>
-                </button>
-            </form>
-        </div>
-    </section>
 
-    <section id="especialidades">
-        <h2>Nuestras Especialidades</h2>
-        <div class="especialidades-grid">
-            <article class="plato-card">
-                <div class="plato-imagen">
-                    <!-- Sustituye la ruta por tu imagen real -->
-                    <img src="arrozconbogavante.jpg" alt="Arroz con Bogavante - Restaurante La Clave Daimiel" loading="lazy">
+                <div class="form-group">
+                    <label for="comentarios">💬 Comentarios (opcional)</label>
+                    <textarea id="comentarios" name="comentarios"></textarea>
                 </div>
-                <div class="plato-info">
-                    <h3>Arroz con Bogavante</h3>
-                    <p>Nuestro plato estrella: arroz caldoso elaborado con bogavante fresco y el toque especial de La Clave.</p>
-                </div>
-            </article>
-            
-            <article class="plato-card">
-                <div class="plato-imagen">
-                    <img src="carpaccio.jpg" alt="Carpaccio de Bacalao - Restaurante La Clave" loading="lazy">
-                </div>
-                <div class="plato-info">
-                    <h3>Carpaccio de Bacalao</h3>
-                    <p>Finas láminas de bacalao de primera calidad con un toque gourmet que sorprenderá tu paladar.</p>
-                </div>
-            </article>
-            
-            <article class="plato-card">
-                <div class="plato-imagen">
-                    <img src="pistoconhuevo.jpg" alt="Pisto con Huevo - Restaurante La Clave" loading="lazy">
-                </div>
-                <div class="plato-info">
-                    <h3>Pisto con Huevo</h3>
-                    <p>La receta tradicional manchega con verduras frescas de la huerta coronada con un huevo perfecto.</p>
-                </div>
-            </article>
+
+                <button type="submit" class="submit-btn">Reservar por WhatsApp</button>
+            </form>
         </div>
     </section>
 
     <section id="menu" class="menu">
         <h2>Menú del Día</h2>
-        <div class="menu-content">
-            <article class="menu-box">
-                <h3>🍽️ Menú Mediodía</h3>
-                <p class="precio">13,50€</p>
-                <ul class="menu-items">
-                    <li>Primero a elegir</li>
-                    <li>Segundo a elegir</li>
-                    <li>Postre casero o café</li>
-                    <li>Pan y bebida incluidos</li>
-                </ul>
-            </article>
-            
-            <article class="menu-box">
-                <h3>🌟 Menú Fin de Semana</h3>
-                <p class="precio">Consultar</p>
-                <ul class="menu-items">
-                    <li>Carta especial de temporada</li>
-                    <li>Platos elaborados</li>
-                    <li>Opciones veganas</li>
-                </ul>
-            </article>
-        </div>
-
-        <!-- NUEVO: Visualización pública del menú diario en imagen -->
         <div class="menu-preview-container">
             <h3 style="color:#8B4513; margin-bottom:1rem;">📷 Menú del día de hoy</h3>
             <img id="menuDiarioImg" class="menu-img-display" alt="Menú del día Restaurante La Clave">
-            <div id="noMenuMsg" class="no-menu-msg">
-                Hoy el menú del día se confirma en sala. Pregúntanos por WhatsApp o en el restaurante.
-            </div>
+            <div id="noMenuMsg" class="no-menu-msg">Hoy el menú del día se confirma en sala. Pregúntanos por WhatsApp.</div>
         </div>
     </section>
 
     <section id="contacto">
-        <h2>Encuéntranos</h2>
-        <div class="contacto-grid">
-            <div class="contacto-info">
-                <div class="info-item">
-                    <strong>📍 Dirección:</strong>
-                    <span>Calle Cruz Ana María, 2<br>13250 Daimiel, Ciudad Real</span>
-                </div>
-                
-                <div class="info-item">
-                    <strong>📱 Teléfono:</strong>
-                    <span>669 67 09 85</span>
-                </div>
-            </div>
-            
-            <aside class="horarios">
-                <h3>🕐 Horarios</h3>
-                <p><strong>Lunes a Viernes:</strong><br>13:00 - 16:00 | 20:00 - 23:00</p>
-                <p><strong>Sábados y Domingos:</strong><br>13:00 - 16:30 | 20:00 - 23:30</p>
-            </aside>
-        </div>
-        
-        <div class="mapa-container">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3039.8!2d-3.6152!3d39.0708!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd6bcce89c3e3b93%3A0x8e7c82a8f7c4e5f0!2sCalle%20Cruz%20Ana%20Mar%C3%ADa%2C%202%2C%2013250%20Daimiel%2C%20Ciudad%20Real!5e0!3m2!1ses!2ses!4v1641234567890!5m2!1ses!2ses" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
+        <h2>Contacto</h2>
+        <p style="text-align:center;">📍 Daimiel | 📱 669 67 09 85</p>
     </section>
 
-    <div class="modal" id="modalReserva">
-        <div class="modal-content">
-            <h3 style="color: #8B4513; margin-bottom: 1.5rem;">➕ Añadir Reserva Manual</h3>
-            <form id="formReservaManual" onsubmit="guardarReservaManual(event)">
-                <div class="form-group">
-                    <label>👤 Nombre del cliente</label>
-                    <input type="text" id="manualNombre" required>
-                </div>
-                <div class="form-group">
-                    <label>☎️ Teléfono</label>
-                    <div class="phone-group">
-                        <select id="manualPrefijo" class="prefix-select">
-                            <option value="+34" selected>🇪🇸 +34</option>
-                            <option value="+33">🇫🇷 +33</option>
-                            <option value="+44">🇬🇧 +44</option>
-                        </select>
-                        <input type="tel" id="manualTelefono" class="phone-input" 
-                               placeholder="600123456" pattern="[0-9]{9}" maxlength="9">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>📅 Fecha</label>
-                    <input type="date" id="manualFecha" required>
-                </div>
-                <div class="form-group">
-                    <label>🕐 Hora</label>
-                    <select id="manualHora" required>
-                        <option value="">Selecciona</option>
-                        <optgroup label="Mediodía">
-                            <option value="13:00">13:00</option>
-                            <option value="13:30">13:30</option>
-                            <option value="14:00">14:00</option>
-                            <option value="14:30">14:30</option>
-                            <option value="15:00">15:00</option>
-                            <option value="15:30">15:30</option>
-                        </optgroup>
-                        <optgroup label="Cena">
-                            <option value="20:00">20:00</option>
-                            <option value="20:30">20:30</option>
-                            <option value="21:00">21:00</option>
-                            <option value="21:30">21:30</option>
-                            <option value="22:00">22:00</option>
-                            <option value="22:30">22:30</option>
-                        </optgroup>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>👥 Personas</label>
-                    <select id="manualPersonas" required>
-                        <option value="">Selecciona</option>
-                        <option value="1">1 persona</option>
-                        <option value="2">2 personas</option>
-                        <option value="3">3 personas</option>
-                        <option value="4">4 personas</option>
-                        <option value="5">5 personas</option>
-                        <option value="6">6 personas</option>
-                        <option value="7">7 personas</option>
-                        <option value="8">8 personas</option>
-                        <option value="mas8">Más de 8 personas</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>💬 Comentarios</label>
-                    <textarea id="manualComentarios"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Estado</label>
-                    <select id="manualEstado">
-                        <option value="confirmada">🟢 Confirmada</option>
-                        <option value="pendiente">🟡 Pendiente</option>
-                    </select>
-                </div>
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="submit-btn" style="flex: 1;">✅ Guardar</button>
-                    <button type="button" class="cancel-btn" style="flex: 1;" onclick="cerrarModalReserva()">❌ Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="legal-modal" id="avisoLegalModal">
-        <div class="legal-content">
-            <h2>⚖️ Aviso Legal y Política de Privacidad</h2>
-            
-            <h3>1. Información General</h3>
-            <p><strong>Titular:</strong> Restaurante La Clave<br>
-            <strong>Dirección:</strong> Calle Cruz Ana María, 2 - 13250 Daimiel, Ciudad Real<br>
-            <strong>Teléfono:</strong> 669 67 09 85</p>
-            
-            <h3>2. Objeto</h3>
-            <p>El presente aviso legal regula el uso del sitio web de Restaurante La Clave. La navegación por este sitio web atribuye la condición de usuario del mismo e implica la aceptación de todas las condiciones incluidas en este aviso legal.</p>
-            
-            <h3>3. Política de Privacidad</h3>
-            <p>En cumplimiento del Reglamento (UE) 2016/679 del Parlamento Europeo y del Consejo, de 27 de abril de 2016 (RGPD), le informamos:</p>
-            
-            <h4>Responsable del tratamiento:</h4>
-            <p>Restaurante La Clave</p>
-            
-            <h4>Finalidad del tratamiento:</h4>
-            <ul>
-                <li>Gestión de reservas y consultas</li>
-                <li>Envío de comunicaciones relacionadas con nuestros servicios</li>
-                <li>Cumplimiento de obligaciones legales</li>
-            </ul>
-            
-            <h4>Base legal:</h4>
-            <p>Consentimiento del interesado y ejecución de contrato de servicios.</p>
-            
-            <h4>Destinatarios:</h4>
-            <p>Los datos no serán cedidos a terceros salvo obligación legal.</p>
-            
-            <h4>Derechos:</h4>
-            <p>Puede ejercer los derechos de acceso, rectificación, supresión, limitación, portabilidad y oposición dirigiéndose a: Restaurante La Clave, Calle Cruz Ana María, 2 - 13250 Daimiel, o al teléfono 669 67 09 85.</p>
-            
-            <button class="close-legal-btn" onclick="cerrarAvisoLegal()">Cerrar</button>
-        </div>
-    </div>
-
-    <div class="legal-modal" id="cookiesModal">
-        <div class="legal-content">
-            <h2>🍪 Política de Cookies</h2>
-            
-            <h3>1. ¿Qué son las cookies?</h3>
-            <p>Las cookies son pequeños archivos de texto que los sitios web almacenan en tu dispositivo cuando los visitas.</p>
-            
-            <h3>2. Tipos de cookies que utilizamos</h3>
-            
-            <h4>Cookies técnicas (necesarias):</h4>
-            <ul>
-                <li><strong>localStorage:</strong> Almacenamos las reservas localmente para el funcionamiento del sistema</li>
-            </ul>
-            
-            <button class="close-legal-btn" onclick="cerrarCookies()">Cerrar</button>
-        </div>
-    </div>
-
-    <a href="https://wa.me/34669670985?text=Hola%2C%20me%20gustar%C3%ADa%20hacer%20una%20reserva" 
-       class="whatsapp-float" 
-       target="_blank" 
-       rel="noopener noreferrer"
-       aria-label="Contactar por WhatsApp">
-        <svg viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
+    <a href="https://wa.me/34669670985" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <span style="font-size:28px;">💬</span>
     </a>
 
     <footer>
-        <p>&copy; 2026 Restaurante La Clave - Daimiel, Ciudad Real</p>
-        <p>Cocina casera manchega con pasión</p>
-        <div class="footer-links">
-            <a href="javascript:void(0)" onclick="abrirAvisoLegal()">Aviso Legal y Privacidad</a>
-            <a href="javascript:void(0)" onclick="abrirCookies()">Política de Cookies</a>
-        </div>
+        <p>&copy; 2026 Restaurante La Clave</p>
     </footer>
 
     <script>
@@ -1795,15 +347,13 @@
         const UMBRAL_NARANJA = 7;
         const UMBRAL_ROJO = 10;
         const PIN_ADMIN = '1234';
-        const PRECIO_MEDIO = 25;
-        const EXPIRACION_HORAS = 24;
-        
+        const IMGBB_API_KEY = '0d76e8bef888bcc0d47d93929dcac1b5'; // API KEY de ImgBB (ejemplo - cámbiala)
+
         function abrirModalAdmin() {
             document.getElementById('adminModal').classList.add('show');
             document.body.style.overflow = 'hidden';
             document.getElementById('pinInput').focus();
         }
-        
         function cerrarModalAdmin() {
             document.getElementById('adminModal').classList.remove('show');
             document.body.style.overflow = 'auto';
@@ -1812,151 +362,220 @@
             document.getElementById('pinInput').value = '';
             document.getElementById('dayReservations').classList.remove('show');
         }
-        
         function verificarPIN() {
             const pin = document.getElementById('pinInput').value;
-            
             if (pin === PIN_ADMIN) {
                 document.getElementById('adminLogin').style.display = 'none';
                 document.getElementById('adminContent').classList.add('active');
-                limpiarReservasExpiradas();
                 cargarDatosAdmin();
+                cargarGaleriaMenus();
             } else {
                 alert('❌ PIN incorrecto');
                 document.getElementById('pinInput').value = '';
                 document.getElementById('pinInput').focus();
             }
         }
-        
+
         function obtenerReservas() {
             const reservas = localStorage.getItem('reservas');
             return reservas ? JSON.parse(reservas) : [];
         }
-        
         function guardarReservas(reservas) {
             localStorage.setItem('reservas', JSON.stringify(reservas));
         }
-        
-        function limpiarReservasExpiradas() {
-            const reservas = obtenerReservas();
-            const ahora = new Date();
-            const reservasActivas = reservas.filter(r => {
-                if (r.estado === 'confirmada') return true;
-                
-                const fechaCreacion = new Date(r.timestamp);
-                const horasTranscurridas = (ahora - fechaCreacion) / (1000 * 60 * 60);
-                
-                return horasTranscurridas < EXPIRACION_HORAS;
-            });
-            
-            if (reservasActivas.length !== reservas.length) {
-                guardarReservas(reservasActivas);
+
+        // SISTEMA DE MENÚ EN LA NUBE (ImgBB)
+        function obtenerMenus() {
+            const menus = localStorage.getItem('menusCloud');
+            return menus ? JSON.parse(menus) : [];
+        }
+        function guardarMenus(menus) {
+            localStorage.setItem('menusCloud', JSON.stringify(menus));
+        }
+
+        async function subirFotoMenu(input) {
+            if (!input.files || !input.files[0]) return;
+
+            const file = input.files[0];
+            const uploadLabel = document.getElementById('uploadLabel');
+            const uploadText = document.getElementById('uploadText');
+            const statusMsg = document.getElementById('statusMessage');
+
+            // UI: Mostrar cargando
+            uploadLabel.classList.add('uploading');
+            uploadText.innerHTML = '<span class="loading-spinner"></span> Subiendo foto...';
+            statusMsg.style.display = 'none';
+
+            try {
+                // Crear FormData para enviar a ImgBB
+                const formData = new FormData();
+                formData.append('image', file);
+
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Guardar la URL en localStorage
+                    const menus = obtenerMenus();
+                    const nuevoMenu = {
+                        id: Date.now(),
+                        url: data.data.url,
+                        deleteUrl: data.data.delete_url,
+                        fecha: new Date().toISOString(),
+                        activo: true
+                    };
+
+                    // Desactivar otros menús
+                    menus.forEach(m => m.activo = false);
+                    menus.push(nuevoMenu);
+                    guardarMenus(menus);
+
+                    // Mostrar éxito
+                    statusMsg.style.display = 'block';
+                    statusMsg.style.background = '#d4edda';
+                    statusMsg.style.color = '#155724';
+                    statusMsg.textContent = '✅ Foto subida correctamente y visible en todos los dispositivos';
+
+                    // Actualizar vista
+                    mostrarMenuPublico();
+                    cargarGaleriaMenus();
+
+                } else {
+                    throw new Error('Error al subir la imagen');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                statusMsg.style.display = 'block';
+                statusMsg.style.background = '#f8d7da';
+                statusMsg.style.color = '#721c24';
+                statusMsg.textContent = '❌ Error al subir la foto. Inténtalo de nuevo.';
+            } finally {
+                // Restaurar UI
+                uploadLabel.classList.remove('uploading');
+                uploadText.textContent = '📤 Subir nueva foto del menú';
+                input.value = '';
             }
         }
-        
+
+        function cargarGaleriaMenus() {
+            const gallery = document.getElementById('menuGallery');
+            const menus = obtenerMenus();
+
+            if (menus.length === 0) {
+                gallery.innerHTML = '<div class="no-menus-msg">No hay fotos de menú subidas aún.</div>';
+                return;
+            }
+
+            gallery.innerHTML = menus
+                .sort((a,b) => new Date(b.fecha) - new Date(a.fecha))
+                .map(menu => {
+                    const fecha = new Date(menu.fecha).toLocaleDateString('es-ES', { 
+                        day: 'numeric', 
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    return `
+                        <div class="menu-gallery-item">
+                            ${menu.activo ? '<div class="active-badge">✅ ACTIVO</div>' : ''}
+                            <img src="${menu.url}" alt="Menú ${fecha}" onclick="activarMenu(${menu.id})">
+                            <button class="delete-img-btn" onclick="eliminarMenu(${menu.id})" title="Eliminar">🗑️</button>
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        function activarMenu(id) {
+            const menus = obtenerMenus();
+            menus.forEach(m => m.activo = (m.id === id));
+            guardarMenus(menus);
+            mostrarMenuPublico();
+            cargarGaleriaMenus();
+        }
+
+        function eliminarMenu(id) {
+            if (!confirm('¿Eliminar esta foto del menú?')) return;
+
+            const menus = obtenerMenus();
+            const menuAEliminar = menus.find(m => m.id === id);
+
+            // Si era el activo, activar el más reciente
+            if (menuAEliminar && menuAEliminar.activo) {
+                const nuevosMenus = menus.filter(m => m.id !== id);
+                if (nuevosMenus.length > 0) {
+                    nuevosMenus[0].activo = true;
+                }
+                guardarMenus(nuevosMenus);
+            } else {
+                guardarMenus(menus.filter(m => m.id !== id));
+            }
+
+            mostrarMenuPublico();
+            cargarGaleriaMenus();
+        }
+
+        function mostrarMenuPublico() {
+            const menus = obtenerMenus();
+            const menuActivo = menus.find(m => m.activo);
+            const img = document.getElementById('menuDiarioImg');
+            const msg = document.getElementById('noMenuMsg');
+
+            if (!img || !msg) return;
+
+            if (menuActivo) {
+                img.src = menuActivo.url;
+                img.style.display = 'block';
+                msg.style.display = 'none';
+            } else {
+                img.style.display = 'none';
+                msg.style.display = 'block';
+            }
+        }
+
         function calcularOcupacion(fecha, turno) {
             const reservas = obtenerReservas();
-            const horasMediodia = ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30'];
-            const horasNoche = ['20:00', '20:30', '21:00', '21:30', '22:00', '22:30'];
-            
-            let horasFiltro = turno === 'mediodia' ? horasMediodia : horasNoche;
-            
-            const ocupacion = reservas
+            const horasMediodia = ['13:00','13:30','14:00','14:30','15:00','15:30'];
+            const horasNoche = ['20:00','20:30','21:00','21:30','22:00','22:30'];
+            const horasFiltro = turno === 'mediodia' ? horasMediodia : horasNoche;
+            return reservas
                 .filter(r => r.fecha === fecha && horasFiltro.includes(r.hora) && r.estado === 'confirmada')
-                .reduce((sum, r) => {
-                    const pers = r.personas === 'mas8' ? 10 : parseInt(r.personas);
-                    return sum + pers;
-                }, 0);
-            return ocupacion;
+                .reduce((sum, r) => sum + (r.personas === 'mas8' ? 10 : parseInt(r.personas)), 0);
         }
-        
         function obtenerEstadoTurno(ocupacion) {
             if (ocupacion >= UMBRAL_ROJO) return 'full';
             if (ocupacion >= UMBRAL_NARANJA) return 'partial';
             return 'available';
         }
-        
+
         function actualizarHorasDisponibles() {
             const fecha = document.getElementById('fecha').value;
             const horaSelect = document.getElementById('hora');
-            
             if (!fecha) return;
-            
             horaSelect.innerHTML = '<option value="">Selecciona hora</option>';
-            
+
             const ocupacionMediodia = calcularOcupacion(fecha, 'mediodia');
             const ocupacionNoche = calcularOcupacion(fecha, 'noche');
-            
             const disponibleMediodia = CAPACIDAD_MEDIODIA - ocupacionMediodia;
             const disponibleNoche = CAPACIDAD_NOCHE - ocupacionNoche;
-            
+
             const mediodia = document.createElement('optgroup');
-            mediodia.label = `Mediodía (${disponibleMediodia}/${CAPACIDAD_MEDIODIA} confirmadas)`;
-            
+            mediodia.label = `Mediodía (${disponibleMediodia}/${CAPACIDAD_MEDIODIA})`;
             const cena = document.createElement('optgroup');
-            cena.label = `Cena (${disponibleNoche}/${CAPACIDAD_NOCHE} confirmadas)`;
-            
-            if (disponibleMediodia > 0) {
-                ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30'].forEach(hora => {
-                    const option = document.createElement('option');
-                    option.value = hora;
-                    option.textContent = hora;
-                    mediodia.appendChild(option);
-                });
-                horaSelect.appendChild(mediodia);
-            }
-            
-            if (disponibleNoche > 0) {
-                ['20:00', '20:30', '21:00', '21:30', '22:00', '22:30'].forEach(hora => {
-                    const option = document.createElement('option');
-                    option.value = hora;
-                    option.textContent = hora;
-                    cena.appendChild(option);
-                });
-                horaSelect.appendChild(cena);
-            }
-            
-            if (disponibleMediodia === 0 && disponibleNoche === 0) {
-                const option = document.createElement('option');
-                option.value = '';
-                option.textContent = 'Sin disponibilidad';
-                option.disabled = true;
-                horaSelect.appendChild(option);
-            }
+            cena.label = `Cena (${disponibleNoche}/${CAPACIDAD_NOCHE})`;
+
+            if (disponibleMediodia > 0) ['13:00','13:30','14:00','14:30','15:00','15:30'].forEach(h => { const o=document.createElement('option'); o.value=h; o.textContent=h; mediodia.appendChild(o); });
+            if (disponibleNoche > 0) ['20:00','20:30','21:00','21:30','22:00','22:30'].forEach(h => { const o=document.createElement('option'); o.value=h; o.textContent=h; cena.appendChild(o); });
+            if (mediodia.children.length) horaSelect.appendChild(mediodia);
+            if (cena.children.length) horaSelect.appendChild(cena);
         }
-        
-        function mostrarDisponibilidad() {
-            const fecha = document.getElementById('fecha').value;
-            const hora = document.getElementById('hora').value;
-            const personasVal = document.getElementById('personas').value;
-            const infoDiv = document.getElementById('availabilityInfo');
-            
-            if (!fecha || !hora || !personasVal) {
-                infoDiv.innerHTML = '';
-                return;
-            }
-            
-            const personas = personasVal === 'mas8' ? 10 : parseInt(personasVal);
-            const esMediodia = ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30'].includes(hora);
-            const turno = esMediodia ? 'mediodia' : 'noche';
-            const capacidad = esMediodia ? CAPACIDAD_MEDIODIA : CAPACIDAD_NOCHE;
-            const ocupacion = calcularOcupacion(fecha, turno);
-            const disponible = capacidad - ocupacion;
-            
-            if (personasVal === 'mas8') {
-                infoDiv.innerHTML = '<div class="availability-info warning">⚠️ Para grupos grandes, confirmaremos por WhatsApp</div>';
-            } else if (personas > disponible) {
-                infoDiv.innerHTML = '<div class="availability-info full">❌ No hay plazas suficientes</div>';
-            } else if (disponible - personas < 5) {
-                infoDiv.innerHTML = '<div class="availability-info warning">⚠️ Quedan pocas plazas: ' + disponible + '/' + capacidad + '</div>';
-            } else {
-                infoDiv.innerHTML = '<div class="availability-info">✅ Disponible: ' + disponible + '/' + capacidad + ' personas</div>';
-            }
-        }
-        
+
         function enviarReserva(event) {
             event.preventDefault();
-            
             const nombre = document.getElementById('nombre').value;
             const prefijo = document.getElementById('prefijo').value;
             const telefono = document.getElementById('telefono').value;
@@ -1964,387 +583,117 @@
             const hora = document.getElementById('hora').value;
             const personasVal = document.getElementById('personas').value;
             const comentarios = document.getElementById('comentarios').value;
-            
-            if (telefono.length !== 9 || !/^[0-9]{9}$/.test(telefono)) {
-                alert('❌ El teléfono debe tener exactamente 9 dígitos');
-                return;
-            }
-            
-            if (personasVal !== 'mas8') {
-                const personas = parseInt(personasVal);
-                const esMediodia = ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30'].includes(hora);
-                const turno = esMediodia ? 'mediodia' : 'noche';
-                const capacidad = esMediodia ? CAPACIDAD_MEDIODIA : CAPACIDAD_NOCHE;
-                const ocupacion = calcularOcupacion(fecha, turno);
-                const disponible = capacidad - ocupacion;
-                
-                if (personas > disponible) {
-                    alert('❌ No hay plazas suficientes confirmadas');
-                    return;
-                }
-            }
-            
+
+            if (telefono.length !== 9) { alert('❌ El teléfono debe tener 9 dígitos'); return; }
+
             const reservas = obtenerReservas();
             reservas.push({
                 id: Date.now(),
-                nombre: nombre,
+                nombre,
                 telefono: prefijo + telefono,
-                fecha: fecha,
-                hora: hora,
+                fecha,
+                hora,
                 personas: personasVal,
-                comentarios: comentarios,
+                comentarios,
                 estado: 'pendiente',
                 timestamp: new Date().toISOString()
             });
             guardarReservas(reservas);
-            
-            const fechaObj = new Date(fecha + 'T00:00:00');
-            const fechaFormateada = fechaObj.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            
-            let mensaje = `¡Hola! Me gustaría hacer una reserva:%0A%0A`;
-            mensaje += `👤 Nombre: ${nombre}%0A`;
-            mensaje += `☎️ Teléfono: ${prefijo} ${telefono}%0A`;
-            mensaje += `📅 Fecha: ${fechaFormateada}%0A`;
-            mensaje += `🕐 Hora: ${hora}%0A`;
-            mensaje += `👥 Personas: ${personasVal === 'mas8' ? 'Más de 8' : personasVal}%0A`;
-            
-            if (comentarios) {
-                mensaje += `%0A💬 ${comentarios}%0A`;
-            }
-            
-            window.open(`https://wa.me/34669670985?text=${mensaje}`, '_blank');
-            
+            window.open(`https://wa.me/34669670985?text=${encodeURIComponent('Reserva:\n' + nombre + '\n' + prefijo + telefono + '\n' + fecha + ' ' + hora + '\n' + personasVal + ' personas' + (comentarios ? '\n' + comentarios : ''))}`, '_blank');
             document.getElementById('reservaForm').reset();
-            document.getElementById('availabilityInfo').innerHTML = '<div class="availability-info">✅ Reserva enviada (pendiente de confirmar)</div>';
         }
-        
-        function confirmarReserva(id) {
-            let reservas = obtenerReservas();
-            reservas = reservas.map(r => {
-                if (r.id === id) {
-                    return { ...r, estado: 'confirmada' };
-                }
-                return r;
-            });
-            guardarReservas(reservas);
-            cargarDatosAdmin();
-        }
-        
+
         function cargarDatosAdmin() {
-            const reservas = obtenerReservas();
-            const hoy = new Date().toISOString().split('T')[0];
-            
-            const pendientes = reservas.filter(r => r.estado === 'pendiente');
-            const confirmadas = reservas.filter(r => r.estado === 'confirmada');
-            
-            document.getElementById('reservasPendientes').textContent = pendientes.length;
-            document.getElementById('reservasConfirmadas').textContent = confirmadas.length;
-            document.getElementById('reservasHoy').textContent = confirmadas.filter(r => r.fecha === hoy).length;
-            
-            const totalPersonas = confirmadas.reduce((sum, r) => {
-                const pers = r.personas === 'mas8' ? 10 : parseInt(r.personas);
-                return sum + pers;
-            }, 0);
-            
-            document.getElementById('ingresosEstimados').textContent = (totalPersonas * PRECIO_MEDIO).toFixed(0) + '€';
-            
             generarCalendario();
             mostrarListaReservas();
         }
-        
+
         function generarCalendario() {
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
-            
             const hoy = new Date();
-            
-            for (let i = 0; i < 30; i++) {
-                const fecha = new Date(hoy);
-                fecha.setDate(hoy.getDate() + i);
+            for (let i=0;i<30;i++) {
+                const fecha = new Date(hoy); fecha.setDate(hoy.getDate()+i);
                 const fechaStr = fecha.toISOString().split('T')[0];
-                
-                const ocupacionMediodia = calcularOcupacion(fechaStr, 'mediodia');
-                const ocupacionNoche = calcularOcupacion(fechaStr, 'noche');
-                
+                const ocupacionMediodia = calcularOcupacion(fechaStr,'mediodia');
+                const ocupacionNoche = calcularOcupacion(fechaStr,'noche');
                 const estadoMediodia = obtenerEstadoTurno(ocupacionMediodia);
                 const estadoNoche = obtenerEstadoTurno(ocupacionNoche);
-                
+
                 const div = document.createElement('div');
                 div.className = 'calendar-day-card';
                 div.setAttribute('data-fecha', fechaStr);
-                div.onclick = function() { mostrarReservasDia(fechaStr); };
-                
-                let emojiMediodia = estadoMediodia === 'full' ? '🔴' : estadoMediodia === 'partial' ? '🟠' : '🟢';
-                let emojiNoche = estadoNoche === 'full' ? '🔴' : estadoNoche === 'partial' ? '🟠' : '🟢';
-                
+                div.onclick = function(){ mostrarReservasDia(fechaStr); };
+
+                const emoji = s => s==='full'?'🔴':(s==='partial'?'🟠':'🟢');
                 div.innerHTML = `
                     <div class="calendar-day-header">
                         <strong>${fecha.getDate()}</strong>
-                        <small>${fecha.toLocaleDateString('es-ES', { weekday: 'short', month: 'short' })}</small>
+                        <small>${fecha.toLocaleDateString('es-ES',{weekday:'short',month:'short'})}</small>
                     </div>
                     <div class="calendar-turnos">
-                        <div class="turno-status ${estadoMediodia}">
-                            ${emojiMediodia} COMIDA<br>
-                            <small>${ocupacionMediodia}/${CAPACIDAD_MEDIODIA}</small>
-                        </div>
-                        <div class="turno-status ${estadoNoche}">
-                            ${emojiNoche} CENA<br>
-                            <small>${ocupacionNoche}/${CAPACIDAD_NOCHE}</small>
-                        </div>
+                        <div class="turno-status ${estadoMediodia}">${emoji(estadoMediodia)} COMIDA<br><small>${ocupacionMediodia}/${CAPACIDAD_MEDIODIA}</small></div>
+                        <div class="turno-status ${estadoNoche}">${emoji(estadoNoche)} CENA<br><small>${ocupacionNoche}/${CAPACIDAD_NOCHE}</small></div>
                     </div>
                 `;
-                
                 grid.appendChild(div);
             }
         }
-        
+
         function mostrarReservasDia(fecha) {
-            document.querySelectorAll('.calendar-day-card').forEach(d => d.classList.remove('selected'));
+            document.querySelectorAll('.calendar-day-card').forEach(d=>d.classList.remove('selected'));
             const card = document.querySelector(`[data-fecha="${fecha}"]`);
             if (card) card.classList.add('selected');
-            
-            const fechaObj = new Date(fecha + 'T00:00:00');
-            const fechaFormateada = fechaObj.toLocaleDateString('es-ES', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-            
-            document.getElementById('dayTitle').textContent = `📅 Reservas del ${fechaFormateada}`;
-            
-            const reservas = obtenerReservas().filter(r => r.fecha === fecha);
-            const horasMediodia = ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30'];
-            
-            const reservasMediodia = reservas.filter(r => horasMediodia.includes(r.hora));
-            const reservasNoche = reservas.filter(r => !horasMediodia.includes(r.hora));
-            
-            const mediodiaDiv = document.getElementById('reservasMediodia');
-            if (reservasMediodia.length === 0) {
-                mediodiaDiv.innerHTML = '<p class="no-reservations">Sin reservas</p>';
-            } else {
-                mediodiaDiv.innerHTML = reservasMediodia
-                    .sort((a, b) => a.hora.localeCompare(b.hora))
-                    .map(r => {
-                        const personasTexto = r.personas === 'mas8' ? 'Más de 8' : r.personas;
-                        const estadoClass = r.estado === 'pendiente' ? 'pendiente' : 'confirmada';
-                        const estadoBadge = r.estado === 'pendiente' 
-                            ? '<span class="estado-badge pendiente">🟡 PENDIENTE</span>' 
-                            : '<span class="estado-badge confirmada">🟢 CONFIRMADA</span>';
-                        const botonConfirmar = r.estado === 'pendiente' 
-                            ? `<button class="confirm-btn" onclick="confirmarReserva(${r.id})">✅ Confirmar</button>` 
-                            : '';
-                        
-                        return `
-                            <div class="reservation-mini ${estadoClass}">
-                                <div>
-                                    <strong>${r.hora} - ${r.nombre}</strong>
-                                    <small>☎️ ${r.telefono} | 👥 ${personasTexto} ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
-                                </div>
-                                <div class="reservation-actions">
-                                    ${estadoBadge}
-                                    ${botonConfirmar}
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-            }
-            
-            const nocheDiv = document.getElementById('reservasNoche');
-            if (reservasNoche.length === 0) {
-                nocheDiv.innerHTML = '<p class="no-reservations">Sin reservas</p>';
-            } else {
-                nocheDiv.innerHTML = reservasNoche
-                    .sort((a, b) => a.hora.localeCompare(b.hora))
-                    .map(r => {
-                        const personasTexto = r.personas === 'mas8' ? 'Más de 8' : r.personas;
-                        const estadoClass = r.estado === 'pendiente' ? 'pendiente' : 'confirmada';
-                        const estadoBadge = r.estado === 'pendiente' 
-                            ? '<span class="estado-badge pendiente">🟡 PENDIENTE</span>' 
-                            : '<span class="estado-badge confirmada">🟢 CONFIRMADA</span>';
-                        const botonConfirmar = r.estado === 'pendiente' 
-                            ? `<button class="confirm-btn" onclick="confirmarReserva(${r.id})">✅ Confirmar</button>` 
-                            : '';
-                        
-                        return `
-                            <div class="reservation-mini ${estadoClass}">
-                                <div>
-                                    <strong>${r.hora} - ${r.nombre}</strong>
-                                    <small>☎️ ${r.telefono} | 👥 ${personasTexto} ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
-                                </div>
-                                <div class="reservation-actions">
-                                    ${estadoBadge}
-                                    ${botonConfirmar}
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-            }
-            
+
+            const reservas = obtenerReservas().filter(r=>r.fecha===fecha);
+            const horasMediodia = ['13:00','13:30','14:00','14:30','15:00','15:30'];
+            const mediodia = reservas.filter(r=>horasMediodia.includes(r.hora));
+            const noche = reservas.filter(r=>!horasMediodia.includes(r.hora));
+
+            const render = (arr) => arr.length ? arr.sort((a,b)=>a.hora.localeCompare(b.hora)).map(r=>`
+                <div class="reservation-mini ${r.estado}">
+                    <div><strong>${r.hora} - ${r.nombre}</strong><small>☎️ ${r.telefono} | 👥 ${r.personas}</small></div>
+                    <div>${r.estado==='pendiente' ? `<button class="confirm-btn" onclick="confirmarReserva(${r.id})">✅</button>` : '<span class="estado-badge confirmada">🟢</span>'}</div>
+                </div>
+            `).join('') : '<p style="color:#999;">Sin reservas</p>';
+
+            document.getElementById('reservasMediodia').innerHTML = render(mediodia);
+            document.getElementById('reservasNoche').innerHTML = render(noche);
             document.getElementById('dayReservations').classList.add('show');
-            document.getElementById('dayReservations').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-        
+
+        function confirmarReserva(id) {
+            const reservas = obtenerReservas().map(r=> r.id===id ? ({...r, estado:'confirmada'}) : r );
+            guardarReservas(reservas);
+            cargarDatosAdmin();
+        }
+
         function mostrarListaReservas() {
             const lista = document.getElementById('reservationsList');
-            const reservas = obtenerReservas().sort((a, b) => {
-                if (a.fecha === b.fecha) return a.hora.localeCompare(b.hora);
-                return a.fecha.localeCompare(b.fecha);
-            });
-            
-            if (reservas.length === 0) {
-                lista.innerHTML = '<p style="text-align: center; color: #999;">No hay reservas</p>';
-                return;
-            }
-            
-            lista.innerHTML = '';
-            reservas.forEach(r => {
-                const fechaObj = new Date(r.fecha + 'T00:00:00');
-                const fechaFormateada = fechaObj.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
-                
-                const personasTexto = r.personas === 'mas8' ? 'Más de 8' : r.personas;
-                const estadoClass = r.estado === 'pendiente' ? 'pendiente' : 'confirmada';
-                const estadoBadge = r.estado === 'pendiente' 
-                    ? '<span class="estado-badge pendiente">🟡 PENDIENTE</span>' 
-                    : '<span class="estado-badge confirmada">🟢 CONFIRMADA</span>';
-                const botonConfirmar = r.estado === 'pendiente' 
-                    ? `<button class="confirm-btn" onclick="confirmarReserva(${r.id})">✅ Confirmar</button>` 
-                    : '';
-                
-                const div = document.createElement('div');
-                div.className = `reservation-item ${estadoClass}`;
-                div.innerHTML = `
-                    <div class="reservation-info">
-                        <strong>${r.nombre} - ${fechaFormateada} a las ${r.hora}</strong>
-                        <small>☎️ ${r.telefono} | 👥 ${personasTexto} ${r.comentarios ? '| 💬 ' + r.comentarios : ''}</small>
+            const reservas = obtenerReservas().sort((a,b)=> (a.fecha===b.fecha ? a.hora.localeCompare(b.hora) : a.fecha.localeCompare(b.fecha)));
+            if (!reservas.length) { lista.innerHTML = '<p style="text-align:center;color:#999;">No hay reservas</p>'; return; }
+            lista.innerHTML = reservas.map(r=>`
+                <div class="reservation-item ${r.estado}">
+                    <div><strong>${r.nombre} - ${r.fecha} ${r.hora}</strong><small>☎️ ${r.telefono} | 👥 ${r.personas}</small></div>
+                    <div style="display:flex; gap:0.5rem;">
+                        ${r.estado==='pendiente' ? `<button class="confirm-btn" onclick="confirmarReserva(${r.id})">✅</button>` : '<span class="estado-badge confirmada">🟢</span>'}
+                        <button class="delete-btn" onclick="eliminarReserva(${r.id})">🗑️</button>
                     </div>
-                    <div class="reservation-actions">
-                        ${estadoBadge}
-                        ${botonConfirmar}
-                        <button class="delete-btn" onclick="eliminarReserva(${r.id})">🗑️ Eliminar</button>
-                    </div>
-                `;
-                lista.appendChild(div);
-            });
+                </div>
+            `).join('');
         }
-        
+
         function eliminarReserva(id) {
-            if (!confirm('¿Eliminar esta reserva?')) return;
-            
-            let reservas = obtenerReservas();
-            reservas = reservas.filter(r => r.id !== id);
-            guardarReservas(reservas);
+            if (!confirm('¿Eliminar?')) return;
+            guardarReservas(obtenerReservas().filter(r=>r.id!==id));
             cargarDatosAdmin();
         }
-        
-        function abrirModalReserva() {
-            document.getElementById('modalReserva').classList.add('show');
-            const hoy = new Date().toISOString().split('T')[0];
-            document.getElementById('manualFecha').setAttribute('min', hoy);
-        }
-        
-        function cerrarModalReserva() {
-            document.getElementById('modalReserva').classList.remove('show');
-            document.getElementById('formReservaManual').reset();
-        }
-        
-        function guardarReservaManual(event) {
-            event.preventDefault();
-            
-            const telefono = document.getElementById('manualTelefono').value;
-            if (telefono && (telefono.length !== 9 || !/^[0-9]{9}$/.test(telefono))) {
-                alert('❌ El teléfono debe tener 9 dígitos');
-                return;
-            }
-            
-            const reservas = obtenerReservas();
-            const prefijo = document.getElementById('manualPrefijo').value;
-            const telefonoCompleto = telefono ? prefijo + telefono : '';
-            
-            reservas.push({
-                id: Date.now(),
-                nombre: document.getElementById('manualNombre').value,
-                telefono: telefonoCompleto,
-                fecha: document.getElementById('manualFecha').value,
-                hora: document.getElementById('manualHora').value,
-                personas: document.getElementById('manualPersonas').value,
-                comentarios: document.getElementById('manualComentarios').value,
-                estado: document.getElementById('manualEstado').value,
-                timestamp: new Date().toISOString()
-            });
-            guardarReservas(reservas);
-            
-            cerrarModalReserva();
-            cargarDatosAdmin();
-            alert('✅ Reserva añadida');
-        }
 
-        // NUEVO: Guardar / mostrar la foto del menú diario
-        function actualizarFotoMenu(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64Image = e.target.result;
-                    localStorage.setItem('fotoMenuDiario', base64Image);
-                    mostrarMenuPublico();
-                    alert('✅ Menú actualizado correctamente en este navegador');
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function mostrarMenuPublico() {
-            const foto = localStorage.getItem('fotoMenuDiario');
-            const imgElement = document.getElementById('menuDiarioImg');
-            const msgElement = document.getElementById('noMenuMsg');
-
-            if (!imgElement || !msgElement) return;
-
-            if (foto) {
-                imgElement.src = foto;
-                imgElement.style.display = 'block';
-                msgElement.style.display = 'none';
-            } else {
-                imgElement.style.display = 'none';
-                msgElement.style.display = 'block';
-            }
-        }
-        
-        function abrirAvisoLegal() {
-            document.getElementById('avisoLegalModal').classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function cerrarAvisoLegal() {
-            document.getElementById('avisoLegalModal').classList.remove('show');
-            document.body.style.overflow = 'auto';
-        }
-        
-        function abrirCookies() {
-            document.getElementById('cookiesModal').classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function cerrarCookies() {
-            document.getElementById('cookiesModal').classList.remove('show');
-            document.body.style.overflow = 'auto';
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function(){
             const fechaInput = document.getElementById('fecha');
             const hoy = new Date().toISOString().split('T')[0];
-            fechaInput.setAttribute('min', hoy);
-
-            // Mostrar, si existe, la última foto de menú guardada
+            fechaInput?.setAttribute('min', hoy);
             mostrarMenuPublico();
-        });
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                cerrarModalReserva();
-                cerrarAvisoLegal();
-                cerrarCookies();
-            }
         });
     </script>
 </body>
