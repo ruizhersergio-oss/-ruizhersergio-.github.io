@@ -87,9 +87,9 @@ function actualizarHorasDisponibles() {
     const fechaSeleccionada = new Date(fechaInput.value + 'T12:00:00');
     const diaSemana = fechaSeleccionada.getDay();
 
-    // Martes cerrado
-    if (diaSemana === 2) {
-        horaSelect.innerHTML = '<option value="">Cerrado los martes</option>';
+    // LUNES CERRADO (día 1)
+    if (diaSemana === 1) {
+        horaSelect.innerHTML = '<option value="">Cerrado los lunes</option>';
         return;
     }
 
@@ -278,50 +278,71 @@ function actualizarEstadisticas() {
     document.getElementById('ingresosEstimados').textContent = ingresos + '€';
 }
 
+// ============================================
+// CALENDARIO EN FORMATO SEMANAL (PRÓXIMO MES)
+// ============================================
+
 function renderizarCalendario() {
     const calendarGrid = document.getElementById('calendarGrid');
     const hoy = new Date();
 
-    let html = '';
-    for (let i = 0; i < 14; i++) {
-        const fecha = new Date(hoy);
-        fecha.setDate(hoy.getDate() + i);
-        const fechaStr = fecha.toISOString().split('T')[0];
-        const diaSemana = fecha.getDay();
+    // Calcular inicio (domingo de esta semana o lunes según prefieras)
+    const inicioSemana = new Date(hoy);
+    inicioSemana.setDate(hoy.getDate() - hoy.getDay()); // Domingo de esta semana
 
-        const reservasDelDia = reservas.filter(r => r.fecha === fechaStr && r.estado !== 'cancelada');
-        const comida = reservasDelDia.filter(r => parseInt(r.hora.split(':')[0]) < 17).length;
-        const cena = reservasDelDia.filter(r => parseInt(r.hora.split(':')[0]) >= 17).length;
+    // Renderizar 5 semanas (35 días ≈ 1 mes)
+    let html = '<div class="calendar-weeks">';
 
-        const esPasado = fecha < hoy.setHours(0,0,0,0);
-        const esCerrado = diaSemana === 2;
+    for (let semana = 0; semana < 5; semana++) {
+        html += '<div class="calendar-week">';
 
-        html += `
-        <div class="calendar-day-card ${i === 0 ? 'selected' : ''}" onclick="mostrarReservasDia('${fechaStr}', this)">
-            <div class="calendar-day-header">
-                <strong>${fecha.getDate()}</strong>
-                <small>${['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][diaSemana]}</small>
-            </div>
-            <div class="calendar-turnos">
-                <div class="turno-status ${esCerrado ? 'past' : esPasado ? 'past' : comida > 0 ? 'partial' : 'available'}">
-                    🍽️ ${esCerrado ? 'Cerrado' : comida + ' reservas'}
+        for (let dia = 0; dia < 7; dia++) {
+            const fecha = new Date(inicioSemana);
+            fecha.setDate(inicioSemana.getDate() + (semana * 7) + dia);
+            const fechaStr = fecha.toISOString().split('T')[0];
+            const diaSemana = fecha.getDay();
+
+            const reservasDelDia = reservas.filter(r => r.fecha === fechaStr && r.estado !== 'cancelada');
+            const comida = reservasDelDia.filter(r => parseInt(r.hora.split(':')[0]) < 17).length;
+            const cena = reservasDelDia.filter(r => parseInt(r.hora.split(':')[0]) >= 17).length;
+
+            const esHoy = fecha.toDateString() === hoy.toDateString();
+            const esPasado = fecha < hoy.setHours(0,0,0,0);
+            const esCerrado = diaSemana === 1; // LUNES
+
+            html += `
+            <div class="calendar-day ${esHoy ? 'today' : ''} ${esPasado ? 'past' : ''} ${esCerrado ? 'closed' : ''}" 
+                 onclick="mostrarReservasDia('${fechaStr}', this)">
+                <div class="day-header">
+                    <strong>${fecha.getDate()}</strong>
+                    <small>${['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][diaSemana]}</small>
                 </div>
-                <div class="turno-status ${esCerrado ? 'past' : esPasado ? 'past' : cena > 0 ? 'partial' : 'available'}">
-                    🌙 ${esCerrado ? 'Cerrado' : cena + ' reservas'}
+                <div class="day-info">
+                    ${esCerrado ? '<span class="closed-badge">Cerrado</span>' : `
+                        <div class="meal-count">🍽️ ${comida}</div>
+                        <div class="meal-count">🌙 ${cena}</div>
+                    `}
                 </div>
-            </div>
-        </div>`;
+            </div>`;
+        }
+
+        html += '</div>'; // Fin semana
     }
+
+    html += '</div>'; // Fin calendar-weeks
 
     calendarGrid.innerHTML = html;
 
-    // Mostrar primer día automáticamente
+    // Mostrar primer día con reservas o hoy
     const primerDia = hoy.toISOString().split('T')[0];
-    mostrarReservasDia(primerDia, calendarGrid.querySelector('.calendar-day-card'));
+    const primerElemento = calendarGrid.querySelector('.calendar-day.today') || calendarGrid.querySelector('.calendar-day');
+    if (primerElemento) {
+        mostrarReservasDia(primerDia, primerElemento);
+    }
 }
 
 function mostrarReservasDia(fecha, elemento) {
-    document.querySelectorAll('.calendar-day-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.calendar-day').forEach(c => c.classList.remove('selected'));
     if (elemento) elemento.classList.add('selected');
 
     const dayReservations = document.getElementById('dayReservations');
@@ -474,20 +495,35 @@ function guardarReservaManual(event) {
 }
 
 // ============================================
-// GESTIÓN DE MENÚ DEL DÍA
+// GESTIÓN DE MENÚ DEL DÍA (MÁXIMO 2 ACTIVOS)
 // ============================================
 
 function cargarMenuDelDia() {
     try {
-        const menuActivo = localStorage.getItem('menu_activo_url');
-        const menuImg = document.getElementById('menuImgDisplay');
+        const menusActivos = JSON.parse(localStorage.getItem('menus_activos') || '[]');
+        const container = document.querySelector('.menu-preview-container');
         const noMenuMsg = document.getElementById('noMenuMsg');
 
-        if (menuActivo && menuImg && noMenuMsg) {
-            menuImg.src = menuActivo;
-            menuImg.style.display = 'block';
-            noMenuMsg.style.display = 'none';
+        if (menusActivos.length === 0) {
+            if (noMenuMsg) noMenuMsg.style.display = 'block';
+            return;
         }
+
+        if (noMenuMsg) noMenuMsg.style.display = 'none';
+
+        // Limpiar contenedor y añadir imágenes
+        const existingImgs = container.querySelectorAll('.menu-img-display');
+        existingImgs.forEach(img => img.remove());
+
+        menusActivos.forEach((menuUrl, index) => {
+            const img = document.createElement('img');
+            img.src = menuUrl;
+            img.className = 'menu-img-display';
+            img.alt = `Menú del día ${index + 1}`;
+            img.style.display = 'block';
+            container.appendChild(img);
+        });
+
     } catch (error) {
         console.error('Error cargando menú:', error);
     }
@@ -575,13 +611,13 @@ function cargarGaleriaMenus() {
 }
 
 function renderizarGaleriaMenus(menus, gallery) {
-    const menuActivo = localStorage.getItem('menu_activo_id');
+    const menusActivos = JSON.parse(localStorage.getItem('menus_activos') || '[]');
 
     let html = '';
     menus.reverse().forEach(menu => {
         const fecha = new Date(menu.fecha);
         const fechaStr = fecha.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
-        const esActivo = menu.id === menuActivo;
+        const esActivo = menusActivos.includes(menu.url);
 
         html += `
         <div class="menu-gallery-item">
@@ -590,7 +626,7 @@ function renderizarGaleriaMenus(menus, gallery) {
             <div class="menu-gallery-meta">
                 <small>${fechaStr}</small>
                 <div style="display:flex; gap:0.3rem;">
-                    ${!esActivo ? `<button class="activate-menu-btn" onclick="activarMenuEnHome('${menu.id}', '${menu.url}')" title="Activar en página principal">✓ Activar</button>` : ''}
+                    ${!esActivo ? `<button class="activate-menu-btn" onclick="activarMenuEnHome('${menu.id}', '${menu.url}')" title="Activar en página principal">✓ Activar</button>` : `<button class="deactivate-menu-btn" onclick="desactivarMenuEnHome('${menu.url}')" title="Desactivar">✗</button>`}
                     <button class="delete-img-btn" onclick="eliminarFotoMenu('${menu.id}')" title="Eliminar foto">🗑️</button>
                 </div>
             </div>
@@ -602,25 +638,42 @@ function renderizarGaleriaMenus(menus, gallery) {
 
 function activarMenuEnHome(menuId, imgUrl) {
     try {
-        localStorage.setItem('menu_activo_id', menuId);
-        localStorage.setItem('menu_activo_url', imgUrl);
+        let menusActivos = JSON.parse(localStorage.getItem('menus_activos') || '[]');
 
-        // Actualizar en home si existe
-        const menuImg = document.getElementById('menuImgDisplay');
-        const noMenuMsg = document.getElementById('noMenuMsg');
-
-        if (menuImg && noMenuMsg) {
-            menuImg.src = imgUrl;
-            menuImg.style.display = 'block';
-            noMenuMsg.style.display = 'none';
+        // Verificar si ya hay 2 activos
+        if (menusActivos.length >= 2 && !menusActivos.includes(imgUrl)) {
+            alert('⚠️ Solo puedes tener 2 menús activos simultáneamente.\nDesactiva uno primero.');
+            return;
         }
 
-        cargarGaleriaMenus();
-        alert('✅ Menú activado en la página principal');
+        // Si no está activo, añadirlo
+        if (!menusActivos.includes(imgUrl)) {
+            menusActivos.push(imgUrl);
+            localStorage.setItem('menus_activos', JSON.stringify(menusActivos));
+            cargarMenuDelDia();
+            cargarGaleriaMenus();
+            alert('✅ Menú activado en la página principal');
+        }
 
     } catch (error) {
         console.error('Error activando menú:', error);
         alert('❌ Error al activar el menú');
+    }
+}
+
+function desactivarMenuEnHome(imgUrl) {
+    try {
+        let menusActivos = JSON.parse(localStorage.getItem('menus_activos') || '[]');
+        menusActivos = menusActivos.filter(url => url !== imgUrl);
+        localStorage.setItem('menus_activos', JSON.stringify(menusActivos));
+
+        cargarMenuDelDia();
+        cargarGaleriaMenus();
+        alert('✅ Menú desactivado');
+
+    } catch (error) {
+        console.error('Error desactivando menú:', error);
+        alert('❌ Error al desactivar');
     }
 }
 
@@ -629,23 +682,18 @@ function eliminarFotoMenu(menuId) {
 
     try {
         let menus = JSON.parse(localStorage.getItem('menus_subidos') || '[]');
+        const menuAEliminar = menus.find(m => m.id === menuId);
+
+        if (menuAEliminar) {
+            // Desactivar si estaba activo
+            desactivarMenuEnHome(menuAEliminar.url);
+        }
+
         menus = menus.filter(m => m.id !== menuId);
         localStorage.setItem('menus_subidos', JSON.stringify(menus));
 
-        // Si era el activo, limpiarlo
-        if (localStorage.getItem('menu_activo_id') === menuId) {
-            localStorage.removeItem('menu_activo_id');
-            localStorage.removeItem('menu_activo_url');
-
-            const menuImg = document.getElementById('menuImgDisplay');
-            const noMenuMsg = document.getElementById('noMenuMsg');
-            if (menuImg && noMenuMsg) {
-                menuImg.style.display = 'none';
-                noMenuMsg.style.display = 'block';
-            }
-        }
-
         cargarGaleriaMenus();
+        cargarMenuDelDia();
 
     } catch (error) {
         console.error('Error eliminando menú:', error);

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="phone-fix.css">
     <link rel="stylesheet" href="menu-center.css">
+    <link rel="stylesheet" href="calendar-weeks.css">
 </head>
 <body>
     <!-- Header -->
@@ -177,7 +178,6 @@
         <div class="menu-preview-container">
             <h3>Menú del Día Actualizado</h3>
             <p class="no-menu-msg" id="noMenuMsg">El menú del día se actualiza diariamente. Consulta con nosotros.</p>
-            <img id="menuImgDisplay" class="menu-img-display" alt="Menú del día">
         </div>
     </section>
 
@@ -201,9 +201,9 @@
             </div>
             <div class="horarios">
                 <h3>Horarios</h3>
-                <p><strong>Lunes a Viernes:</strong><br>13:00 - 16:00 | 20:00 - 23:00</p>
+                <p><strong>Martes a Viernes:</strong><br>13:00 - 16:00 | 20:00 - 23:00</p>
                 <p><strong>Sábados y Domingos:</strong><br>13:00 - 16:30 | 20:00 - 23:30</p>
-                <p><strong>Martes:</strong> Cerrado</p>
+                <p><strong>Lunes:</strong> Cerrado</p>
             </div>
         </div>
         <div class="mapa-container">
@@ -268,14 +268,10 @@
                     </div>
                 </div>
 
-                <!-- Gestión de Menú CON BOTÓN ACTIVAR -->
+                <!-- Gestión de Menú (HASTA 2 ACTIVOS) -->
                 <div class="admin-upload-section">
-                    <h3 style="color:#8B4513; margin-bottom:1rem;">📸 Gestión de Menú del Día (sincronizado)</h3>
-                    <p style="color:#666; margin-bottom:1rem;">Subes una foto desde el móvil y se actualiza en todos los dispositivos.</p>
-
-                    <div id="firebaseWarning" style="background:#fff3cd; padding:1rem; border-radius:8px; margin-bottom:1rem; border-left:4px solid #ff9800; display:none;">
-                        <p style="margin:0; color:#856404;">⚠️ No se pudo cargar el menú desde servidor. Configura Firebase/ImgBB.</p>
-                    </div>
+                    <h3 style="color:#8B4513; margin-bottom:1rem;">📸 Gestión de Menú del Día</h3>
+                    <p style="color:#666; margin-bottom:1rem;">Puedes tener hasta 2 menús activos simultáneamente.</p>
 
                     <label for="menuUpload" class="upload-label">
                         📤 Subir nueva foto del menú
@@ -288,10 +284,10 @@
                     </div>
                 </div>
 
-                <!-- Calendario -->
+                <!-- Calendario en formato SEMANAS -->
                 <div class="calendar-container">
                     <div class="calendar-header">
-                        <h3 style="color:#8B4513;">📅 Calendario de Reservas (14 días)</h3>
+                        <h3 style="color:#8B4513;">📅 Calendario de Reservas (Próximo Mes)</h3>
                         <button class="add-manual-btn" onclick="mostrarModalReservaManual()">+ Añadir Reserva Manual</button>
                     </div>
                     <div id="calendarGrid" class="calendar-grid"></div>
