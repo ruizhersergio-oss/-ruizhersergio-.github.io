@@ -1,5 +1,5 @@
 // ============================================
-// RESTAURANTE LA CLAVE - APP.JS
+// RESTAURANTE LA CLAVE - APP.JS CORREGIDO
 // Sistema de Reservas + Panel Admin
 // ============================================
 
@@ -279,22 +279,26 @@ function actualizarEstadisticas() {
 }
 
 // ============================================
-// CALENDARIO EN FORMATO SEMANAL (PRÓXIMO MES)
+// CALENDARIO MEJORADO: LUNES A DOMINGO
+// Semana actual y siguientes, días pasados tachados
 // ============================================
 
 function renderizarCalendario() {
     const calendarGrid = document.getElementById('calendarGrid');
     const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
 
-    // Calcular inicio (domingo de esta semana o lunes según prefieras)
+    // Calcular inicio: LUNES de esta semana
+    const diaSemana = hoy.getDay();
+    const diasDesdeInicio = diaSemana === 0 ? 6 : diaSemana - 1; // Si es domingo, retroceder 6 días
     const inicioSemana = new Date(hoy);
-    inicioSemana.setDate(hoy.getDate() - hoy.getDay()); // Domingo de esta semana
+    inicioSemana.setDate(hoy.getDate() - diasDesdeInicio);
 
     // Renderizar 5 semanas (35 días ≈ 1 mes)
-    let html = '<div class="calendar-weeks">';
+    let html = '<div class="calendar-weeks-container">';
 
     for (let semana = 0; semana < 5; semana++) {
-        html += '<div class="calendar-week">';
+        html += '<div class="calendar-week-row">';
 
         for (let dia = 0; dia < 7; dia++) {
             const fecha = new Date(inicioSemana);
@@ -307,20 +311,22 @@ function renderizarCalendario() {
             const cena = reservasDelDia.filter(r => parseInt(r.hora.split(':')[0]) >= 17).length;
 
             const esHoy = fecha.toDateString() === hoy.toDateString();
-            const esPasado = fecha < hoy.setHours(0,0,0,0);
+            const esPasado = fecha < hoy;
             const esCerrado = diaSemana === 1; // LUNES
 
+            const nombresDias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+
             html += `
-            <div class="calendar-day ${esHoy ? 'today' : ''} ${esPasado ? 'past' : ''} ${esCerrado ? 'closed' : ''}" 
+            <div class="calendar-day-box ${esHoy ? 'today' : ''} ${esPasado ? 'past' : ''} ${esCerrado ? 'closed' : ''}" 
                  onclick="mostrarReservasDia('${fechaStr}', this)">
-                <div class="day-header">
-                    <strong>${fecha.getDate()}</strong>
-                    <small>${['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][diaSemana]}</small>
+                <div class="day-date">
+                    <span class="day-number">${fecha.getDate()}</span>
+                    <span class="day-name">${nombresDias[diaSemana]}</span>
                 </div>
-                <div class="day-info">
-                    ${esCerrado ? '<span class="closed-badge">Cerrado</span>' : `
-                        <div class="meal-count">🍽️ ${comida}</div>
-                        <div class="meal-count">🌙 ${cena}</div>
+                <div class="day-stats">
+                    ${esCerrado ? '<span class="closed-label">CERRADO</span>' : `
+                        <div class="stat-row"><span class="icon">🍽️</span><span class="count">${comida}</span></div>
+                        <div class="stat-row"><span class="icon">🌙</span><span class="count">${cena}</span></div>
                     `}
                 </div>
             </div>`;
@@ -329,20 +335,20 @@ function renderizarCalendario() {
         html += '</div>'; // Fin semana
     }
 
-    html += '</div>'; // Fin calendar-weeks
+    html += '</div>'; // Fin container
 
     calendarGrid.innerHTML = html;
 
-    // Mostrar primer día con reservas o hoy
+    // Seleccionar hoy por defecto
     const primerDia = hoy.toISOString().split('T')[0];
-    const primerElemento = calendarGrid.querySelector('.calendar-day.today') || calendarGrid.querySelector('.calendar-day');
-    if (primerElemento) {
-        mostrarReservasDia(primerDia, primerElemento);
+    const elementoHoy = calendarGrid.querySelector('.calendar-day-box.today');
+    if (elementoHoy) {
+        mostrarReservasDia(primerDia, elementoHoy);
     }
 }
 
 function mostrarReservasDia(fecha, elemento) {
-    document.querySelectorAll('.calendar-day').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.calendar-day-box').forEach(c => c.classList.remove('selected'));
     if (elemento) elemento.classList.add('selected');
 
     const dayReservations = document.getElementById('dayReservations');
@@ -496,6 +502,7 @@ function guardarReservaManual(event) {
 
 // ============================================
 // GESTIÓN DE MENÚ DEL DÍA (MÁXIMO 2 ACTIVOS)
+// ACTUALIZADO: Renderiza en grid lado a lado
 // ============================================
 
 function cargarMenuDelDia() {
@@ -504,6 +511,12 @@ function cargarMenuDelDia() {
         const container = document.querySelector('.menu-preview-container');
         const noMenuMsg = document.getElementById('noMenuMsg');
 
+        // Limpiar imágenes previas
+        const existingContainer = container.querySelector('.menu-images-container');
+        if (existingContainer) {
+            existingContainer.remove();
+        }
+
         if (menusActivos.length === 0) {
             if (noMenuMsg) noMenuMsg.style.display = 'block';
             return;
@@ -511,18 +524,20 @@ function cargarMenuDelDia() {
 
         if (noMenuMsg) noMenuMsg.style.display = 'none';
 
-        // Limpiar contenedor y añadir imágenes
-        const existingImgs = container.querySelectorAll('.menu-img-display');
-        existingImgs.forEach(img => img.remove());
+        // Crear contenedor de grid para las imágenes
+        const gridContainer = document.createElement('div');
+        gridContainer.className = 'menu-images-container';
 
         menusActivos.forEach((menuUrl, index) => {
             const img = document.createElement('img');
             img.src = menuUrl;
             img.className = 'menu-img-display';
             img.alt = `Menú del día ${index + 1}`;
-            img.style.display = 'block';
-            container.appendChild(img);
+            img.onclick = () => verImagenCompleta(menuUrl);
+            gridContainer.appendChild(img);
         });
+
+        container.appendChild(gridContainer);
 
     } catch (error) {
         console.error('Error cargando menú:', error);
