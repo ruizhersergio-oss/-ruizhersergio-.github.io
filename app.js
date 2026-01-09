@@ -1,6 +1,6 @@
 // ============================================
 // RESTAURANTE LA CLAVE - APP.JS CORREGIDO
-// Sistema de Reservas + Panel Admin
+// Fix: Timezone, Panel día completo
 // ============================================
 
 // Variables globales
@@ -52,7 +52,7 @@ function limpiarReservasAntiguas() {
     const hace30dias = hoy - (30 * 24 * 60 * 60 * 1000);
 
     reservas = reservas.filter(r => {
-        const fechaReserva = new Date(r.fecha).getTime();
+        const fechaReserva = new Date(r.fecha + 'T12:00:00').getTime();
         return fechaReserva >= hace30dias;
     });
 
@@ -69,13 +69,23 @@ function inicializarFormularioReserva() {
         const hoy = new Date();
         const manana = new Date(hoy);
         manana.setDate(hoy.getDate() + 1);
-        const minFecha = manana.toISOString().split('T')[0];
+
+        // FIX: Formatear fecha local sin timezone
+        const minFecha = formatearFechaInput(manana);
         fechaInput.setAttribute('min', minFecha);
 
         const maxFecha = new Date(hoy);
         maxFecha.setDate(hoy.getDate() + 90);
-        fechaInput.setAttribute('max', maxFecha.toISOString().split('T')[0]);
+        fechaInput.setAttribute('max', formatearFechaInput(maxFecha));
     }
+}
+
+// FIX: Función para evitar problemas de timezone
+function formatearFechaInput(fecha) {
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, '0');
+    const day = String(fecha.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
 function actualizarHorasDisponibles() {
@@ -84,7 +94,9 @@ function actualizarHorasDisponibles() {
 
     if (!fechaInput || !horaSelect || !fechaInput.value) return;
 
-    const fechaSeleccionada = new Date(fechaInput.value + 'T12:00:00');
+    // FIX: Crear fecha local sin conversión UTC
+    const partes = fechaInput.value.split('-');
+    const fechaSeleccionada = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
     const diaSemana = fechaSeleccionada.getDay();
 
     // LUNES CERRADO (día 1)
@@ -168,8 +180,12 @@ function enviarReserva(event) {
         return;
     }
 
-    const fechaReserva = new Date(fecha + 'T12:00:00');
+    // FIX: Validar fecha sin timezone
+    const partes = fecha.split('-');
+    const fechaReserva = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
     const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
     if (fechaReserva <= hoy) {
         alert('❌ Debes reservar con al menos 24h de antelación');
         return;
@@ -265,11 +281,12 @@ function cargarPanelAdmin() {
 }
 
 function actualizarEstadisticas() {
-    const hoy = new Date().toISOString().split('T')[0];
+    const hoy = new Date();
+    const hoyStr = formatearFechaInput(hoy);
 
     const pendientes = reservas.filter(r => r.estado === 'pendiente').length;
     const confirmadas = reservas.filter(r => r.estado === 'confirmada').length;
-    const reservasHoy = reservas.filter(r => r.fecha === hoy && r.estado !== 'cancelada').length;
+    const reservasHoy = reservas.filter(r => r.fecha === hoyStr && r.estado !== 'cancelada').length;
     const ingresos = confirmadas * 25;
 
     document.getElementById('pendientesCount').textContent = pendientes;
@@ -280,7 +297,6 @@ function actualizarEstadisticas() {
 
 // ============================================
 // CALENDARIO MEJORADO: LUNES A DOMINGO
-// Semana actual y siguientes, días pasados tachados
 // ============================================
 
 function renderizarCalendario() {
@@ -290,11 +306,11 @@ function renderizarCalendario() {
 
     // Calcular inicio: LUNES de esta semana
     const diaSemana = hoy.getDay();
-    const diasDesdeInicio = diaSemana === 0 ? 6 : diaSemana - 1; // Si es domingo, retroceder 6 días
+    const diasDesdeInicio = diaSemana === 0 ? 6 : diaSemana - 1;
     const inicioSemana = new Date(hoy);
     inicioSemana.setDate(hoy.getDate() - diasDesdeInicio);
 
-    // Renderizar 5 semanas (35 días ≈ 1 mes)
+    // Renderizar 5 semanas (35 días)
     let html = '<div class="calendar-weeks-container">';
 
     for (let semana = 0; semana < 5; semana++) {
@@ -303,7 +319,7 @@ function renderizarCalendario() {
         for (let dia = 0; dia < 7; dia++) {
             const fecha = new Date(inicioSemana);
             fecha.setDate(inicioSemana.getDate() + (semana * 7) + dia);
-            const fechaStr = fecha.toISOString().split('T')[0];
+            const fechaStr = formatearFechaInput(fecha);
             const diaSemana = fecha.getDay();
 
             const reservasDelDia = reservas.filter(r => r.fecha === fechaStr && r.estado !== 'cancelada');
@@ -318,7 +334,8 @@ function renderizarCalendario() {
 
             html += `
             <div class="calendar-day-box ${esHoy ? 'today' : ''} ${esPasado ? 'past' : ''} ${esCerrado ? 'closed' : ''}" 
-                 onclick="mostrarReservasDia('${fechaStr}', this)">
+                 data-fecha="${fechaStr}"
+                 onclick="scrollToReservasCompletas('${fechaStr}')">
                 <div class="day-date">
                     <span class="day-number">${fecha.getDate()}</span>
                     <span class="day-name">${nombresDias[diaSemana]}</span>
@@ -332,76 +349,52 @@ function renderizarCalendario() {
             </div>`;
         }
 
-        html += '</div>'; // Fin semana
+        html += '</div>';
     }
 
-    html += '</div>'; // Fin container
+    html += '</div>';
 
     calendarGrid.innerHTML = html;
-
-    // Seleccionar hoy por defecto
-    const primerDia = hoy.toISOString().split('T')[0];
-    const elementoHoy = calendarGrid.querySelector('.calendar-day-box.today');
-    if (elementoHoy) {
-        mostrarReservasDia(primerDia, elementoHoy);
-    }
 }
 
-function mostrarReservasDia(fecha, elemento) {
+// FIX: Ahora scrollea a "Todas las Reservas" filtradas por día
+function scrollToReservasCompletas(fecha) {
+    // Marcar día seleccionado
     document.querySelectorAll('.calendar-day-box').forEach(c => c.classList.remove('selected'));
-    if (elemento) elemento.classList.add('selected');
+    const diaElement = document.querySelector(`.calendar-day-box[data-fecha="${fecha}"]`);
+    if (diaElement) diaElement.classList.add('selected');
 
-    const dayReservations = document.getElementById('dayReservations');
-    const selectedDate = document.getElementById('selectedDate');
-    const content = document.getElementById('dayReservationsContent');
-
-    selectedDate.textContent = formatearFecha(fecha);
-
+    // Filtrar reservas del día en la lista completa
     const reservasDelDia = reservas.filter(r => r.fecha === fecha && r.estado !== 'cancelada');
 
-    if (reservasDelDia.length === 0) {
-        content.innerHTML = '<p style="text-align:center; color:#999; padding:2rem;">No hay reservas para este día</p>';
-    } else {
-        const comida = reservasDelDia.filter(r => parseInt(r.hora.split(':')[0]) < 17);
-        const cena = reservasDelDia.filter(r => parseInt(r.hora.split(':')[0]) >= 17);
+    // Scroll a la sección de "Todas las Reservas"
+    const reservationsList = document.querySelector('.reservations-list');
+    if (reservationsList) {
+        reservationsList.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-        let html = '';
+        // Resaltar temporalmente las reservas del día
+        setTimeout(() => {
+            const allItems = document.querySelectorAll('.reservation-item');
+            allItems.forEach(item => item.classList.remove('highlight'));
 
-        if (comida.length > 0) {
-            html += '<div class="turno-section"><h4>🍽️ Mediodía</h4>';
-            comida.forEach(r => html += renderizarReservaMini(r));
-            html += '</div>';
-        }
-
-        if (cena.length > 0) {
-            html += '<div class="turno-section"><h4>🌙 Cena</h4>';
-            cena.forEach(r => html += renderizarReservaMini(r));
-            html += '</div>';
-        }
-
-        content.innerHTML = html;
+            reservasDelDia.forEach(r => {
+                const item = document.querySelector(`.reservation-item[data-id="${r.id}"]`);
+                if (item) {
+                    item.classList.add('highlight');
+                    setTimeout(() => item.classList.remove('highlight'), 3000);
+                }
+            });
+        }, 500);
     }
-
-    dayReservations.classList.add('show');
-}
-
-function renderizarReservaMini(r) {
-    return `
-    <div class="reservation-mini ${r.estado}">
-        <div>
-            <strong>${r.nombre}</strong>
-            <small>${r.hora} | ${r.personas === 'mas8' ? '+8' : r.personas} personas | ${r.telefono}</small>
-        </div>
-        <span class="estado-badge ${r.estado}">${r.estado === 'pendiente' ? '⏳ Pendiente' : '✓ Confirmada'}</span>
-    </div>`;
 }
 
 function renderizarTodasLasReservas() {
     const container = document.getElementById('reservationsList');
-    const hoy = new Date().toISOString().split('T')[0];
+    const hoy = new Date();
+    const hoyStr = formatearFechaInput(hoy);
 
     const reservasFuturas = reservas
-        .filter(r => r.fecha >= hoy && r.estado !== 'cancelada')
+        .filter(r => r.fecha >= hoyStr && r.estado !== 'cancelada')
         .sort((a, b) => {
             const diff = a.fecha.localeCompare(b.fecha);
             return diff !== 0 ? diff : a.hora.localeCompare(b.hora);
@@ -415,10 +408,10 @@ function renderizarTodasLasReservas() {
     let html = '';
     reservasFuturas.forEach(r => {
         html += `
-        <div class="reservation-item ${r.estado}">
+        <div class="reservation-item ${r.estado}" data-id="${r.id}">
             <div class="reservation-info">
                 <strong>${r.nombre}</strong>
-                <small>📅 ${formatearFecha(r.fecha)} | 🕐 ${r.hora} | 👥 ${r.personas === 'mas8' ? 'Más de 8' : r.personas} | 📞 ${r.telefono}</small>
+                <small>📅 ${formatearFecha(r.fecha)} | 🕐 ${r.hora} | 👥 ${r.personas === 'mas8' ? 'Más de 8' : r.personas} personas | 📞 ${r.telefono}</small>
                 ${r.comentarios ? `<small>💬 ${r.comentarios}</small>` : ''}
             </div>
             <div class="reservation-actions">
@@ -457,10 +450,9 @@ function eliminarReserva(id) {
 function mostrarModalReservaManual() {
     document.getElementById('manualReservationModal').classList.add('show');
 
-    // Inicializar fecha mínima
     const manana = new Date();
     manana.setDate(manana.getDate() + 1);
-    document.getElementById('manualFecha').setAttribute('min', manana.toISOString().split('T')[0]);
+    document.getElementById('manualFecha').setAttribute('min', formatearFechaInput(manana));
 }
 
 function cerrarModalReservaManual() {
@@ -501,8 +493,7 @@ function guardarReservaManual(event) {
 }
 
 // ============================================
-// GESTIÓN DE MENÚ DEL DÍA (MÁXIMO 2 ACTIVOS)
-// ACTUALIZADO: Renderiza en grid lado a lado
+// GESTIÓN DE MENÚ DEL DÍA
 // ============================================
 
 function cargarMenuDelDia() {
@@ -511,7 +502,6 @@ function cargarMenuDelDia() {
         const container = document.querySelector('.menu-preview-container');
         const noMenuMsg = document.getElementById('noMenuMsg');
 
-        // Limpiar imágenes previas
         const existingContainer = container.querySelector('.menu-images-container');
         if (existingContainer) {
             existingContainer.remove();
@@ -524,7 +514,6 @@ function cargarMenuDelDia() {
 
         if (noMenuMsg) noMenuMsg.style.display = 'none';
 
-        // Crear contenedor de grid para las imágenes
         const gridContainer = document.createElement('div');
         gridContainer.className = 'menu-images-container';
 
@@ -569,7 +558,6 @@ function subirFotoMenu(input) {
         const imgData = e.target.result;
 
         try {
-            // Guardar en localStorage
             const menus = JSON.parse(localStorage.getItem('menus_subidos') || '[]');
             const nuevoMenu = {
                 id: Date.now().toString(),
@@ -580,7 +568,6 @@ function subirFotoMenu(input) {
 
             menus.push(nuevoMenu);
 
-            // Limitar a 10 menús máximo
             if (menus.length > 10) {
                 menus.shift();
             }
@@ -655,13 +642,11 @@ function activarMenuEnHome(menuId, imgUrl) {
     try {
         let menusActivos = JSON.parse(localStorage.getItem('menus_activos') || '[]');
 
-        // Verificar si ya hay 2 activos
         if (menusActivos.length >= 2 && !menusActivos.includes(imgUrl)) {
             alert('⚠️ Solo puedes tener 2 menús activos simultáneamente.\nDesactiva uno primero.');
             return;
         }
 
-        // Si no está activo, añadirlo
         if (!menusActivos.includes(imgUrl)) {
             menusActivos.push(imgUrl);
             localStorage.setItem('menus_activos', JSON.stringify(menusActivos));
@@ -700,7 +685,6 @@ function eliminarFotoMenu(menuId) {
         const menuAEliminar = menus.find(m => m.id === menuId);
 
         if (menuAEliminar) {
-            // Desactivar si estaba activo
             desactivarMenuEnHome(menuAEliminar.url);
         }
 
@@ -739,7 +723,8 @@ function cerrarModalLegal() {
 // ============================================
 
 function formatearFecha(fechaStr) {
-    const fecha = new Date(fechaStr + 'T12:00:00');
+    const partes = fechaStr.split('-');
+    const fecha = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
     const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     return fecha.toLocaleDateString('es-ES', opciones);
 }
