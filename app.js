@@ -1,27 +1,84 @@
 // ============================================
-// RESTAURANTE LA CLAVE - APP.JS CORREGIDO
-// Fix: Timezone, Panel día completo
+// RESTAURANTE LA CLAVE - APP.JS COMPLETO
+// Funcionalidades:
+// - Panel de día + Todas las reservas
+// - Días bloqueados por admin
+// - Fix timezone
 // ============================================
 
 // Variables globales
 let reservas = [];
 let adminLogueado = false;
+let diasBloqueados = []; // Array de fechas bloqueadas
 
 // ============================================
 // INICIALIZACIÓN
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
     cargarReservas();
+    cargarDiasBloqueados();
     inicializarFormularioReserva();
     cargarMenuDelDia();
 
-    // Auto-actualizar estadísticas cada 30 segundos si admin está abierto
     setInterval(() => {
         if (adminLogueado && document.getElementById('adminModal').classList.contains('show')) {
             actualizarEstadisticas();
         }
     }, 30000);
 });
+
+// ============================================
+// GESTIÓN DE DÍAS BLOQUEADOS
+// ============================================
+
+function cargarDiasBloqueados() {
+    try {
+        const data = localStorage.getItem('dias_bloqueados_laclave');
+        diasBloqueados = data ? JSON.parse(data) : [];
+    } catch (error) {
+        console.error('Error cargando días bloqueados:', error);
+        diasBloqueados = [];
+    }
+}
+
+function guardarDiasBloqueados() {
+    try {
+        localStorage.setItem('dias_bloqueados_laclave', JSON.stringify(diasBloqueados));
+    } catch (error) {
+        console.error('Error guardando días bloqueados:', error);
+    }
+}
+
+function toggleDiaBloqueado(fecha) {
+    if (!adminLogueado) {
+        alert('⚠️ Debes estar logueado como admin');
+        return;
+    }
+
+    const index = diasBloqueados.indexOf(fecha);
+
+    if (index > -1) {
+        // Desbloquear
+        if (confirm(`¿Desbloquear el día ${formatearFecha(fecha)}?`)) {
+            diasBloqueados.splice(index, 1);
+            guardarDiasBloqueados();
+            renderizarCalendario();
+            alert('✅ Día desbloqueado');
+        }
+    } else {
+        // Bloquear
+        if (confirm(`¿Bloquear el día ${formatearFecha(fecha)}?\n\nNo se podrán hacer reservas para este día.`)) {
+            diasBloqueados.push(fecha);
+            guardarDiasBloqueados();
+            renderizarCalendario();
+            alert('✅ Día bloqueado. No se aceptarán reservas.');
+        }
+    }
+}
+
+function esDiaBloqueado(fecha) {
+    return diasBloqueados.includes(fecha);
+}
 
 // ============================================
 // GESTIÓN DE RESERVAS
@@ -70,17 +127,34 @@ function inicializarFormularioReserva() {
         const manana = new Date(hoy);
         manana.setDate(hoy.getDate() + 1);
 
-        // FIX: Formatear fecha local sin timezone
         const minFecha = formatearFechaInput(manana);
         fechaInput.setAttribute('min', minFecha);
 
         const maxFecha = new Date(hoy);
         maxFecha.setDate(hoy.getDate() + 90);
         fechaInput.setAttribute('max', formatearFechaInput(maxFecha));
+
+        // Listener para validar días bloqueados
+        fechaInput.addEventListener('change', validarFechaBloqueada);
     }
 }
 
-// FIX: Función para evitar problemas de timezone
+function validarFechaBloqueada() {
+    const fechaInput = document.getElementById('fecha');
+    const horaSelect = document.getElementById('hora');
+
+    if (!fechaInput || !fechaInput.value) return;
+
+    if (esDiaBloqueado(fechaInput.value)) {
+        alert('❌ Este día no está disponible para reservas.\nPor favor selecciona otra fecha.');
+        fechaInput.value = '';
+        horaSelect.innerHTML = '<option value="">Selecciona fecha primero</option>';
+        return;
+    }
+
+    actualizarHorasDisponibles();
+}
+
 function formatearFechaInput(fecha) {
     const year = fecha.getFullYear();
     const month = String(fecha.getMonth() + 1).padStart(2, '0');
@@ -94,12 +168,16 @@ function actualizarHorasDisponibles() {
 
     if (!fechaInput || !horaSelect || !fechaInput.value) return;
 
-    // FIX: Crear fecha local sin conversión UTC
+    // Verificar si está bloqueado
+    if (esDiaBloqueado(fechaInput.value)) {
+        horaSelect.innerHTML = '<option value="">Día no disponible</option>';
+        return;
+    }
+
     const partes = fechaInput.value.split('-');
     const fechaSeleccionada = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
     const diaSemana = fechaSeleccionada.getDay();
 
-    // LUNES CERRADO (día 1)
     if (diaSemana === 1) {
         horaSelect.innerHTML = '<option value="">Cerrado los lunes</option>';
         return;
@@ -130,6 +208,11 @@ function mostrarDisponibilidad() {
 
     if (!fecha || !hora || !personas || !infoDiv) return;
 
+    if (esDiaBloqueado(fecha)) {
+        infoDiv.innerHTML = `<div class="availability-info full">✗ Día no disponible</div>`;
+        return;
+    }
+
     const reservasEnHorario = reservas.filter(r => 
         r.fecha === fecha && r.hora === hora && r.estado !== 'cancelada'
     );
@@ -153,7 +236,6 @@ function mostrarDisponibilidad() {
 function enviarReserva(event) {
     event.preventDefault();
 
-    // Rate limiting
     const ultimoEnvio = parseInt(localStorage.getItem('ultimo_envio_reserva') || '0');
     const ahora = Date.now();
     if (ahora - ultimoEnvio < 60000) {
@@ -169,7 +251,12 @@ function enviarReserva(event) {
     const personas = document.getElementById('personas').value;
     const comentarios = sanitizarTexto(document.getElementById('comentarios')?.value || '');
 
-    // Validaciones
+    // Validar día bloqueado
+    if (esDiaBloqueado(fecha)) {
+        alert('❌ Este día no está disponible para reservas.');
+        return;
+    }
+
     if (nombre.length < 3) {
         alert('❌ El nombre debe tener al menos 3 caracteres');
         return;
@@ -180,7 +267,6 @@ function enviarReserva(event) {
         return;
     }
 
-    // FIX: Validar fecha sin timezone
     const partes = fecha.split('-');
     const fechaReserva = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
     const hoy = new Date();
@@ -207,7 +293,6 @@ function enviarReserva(event) {
     guardarReservas();
     localStorage.setItem('ultimo_envio_reserva', ahora.toString());
 
-    // Construir mensaje WhatsApp
     const mensaje = `🍽️ *NUEVA RESERVA - La Clave*
 
 👤 *Nombre:* ${nombre}
@@ -221,10 +306,8 @@ _Reserva realizada desde la web_`;
 
     const urlWhatsApp = `https://wa.me/34669670985?text=${encodeURIComponent(mensaje)}`;
 
-    // Abrir WhatsApp
     window.open(urlWhatsApp, '_blank');
 
-    // Limpiar formulario
     document.getElementById('reservaForm').reset();
     document.getElementById('availabilityInfo').innerHTML = '';
 
@@ -296,7 +379,7 @@ function actualizarEstadisticas() {
 }
 
 // ============================================
-// CALENDARIO MEJORADO: LUNES A DOMINGO
+// CALENDARIO CON DÍAS BLOQUEADOS
 // ============================================
 
 function renderizarCalendario() {
@@ -304,13 +387,11 @@ function renderizarCalendario() {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
-    // Calcular inicio: LUNES de esta semana
     const diaSemana = hoy.getDay();
     const diasDesdeInicio = diaSemana === 0 ? 6 : diaSemana - 1;
     const inicioSemana = new Date(hoy);
     inicioSemana.setDate(hoy.getDate() - diasDesdeInicio);
 
-    // Renderizar 5 semanas (35 días)
     let html = '<div class="calendar-weeks-container">';
 
     for (let semana = 0; semana < 5; semana++) {
@@ -328,24 +409,31 @@ function renderizarCalendario() {
 
             const esHoy = fecha.toDateString() === hoy.toDateString();
             const esPasado = fecha < hoy;
-            const esCerrado = diaSemana === 1; // LUNES
+            const esCerrado = diaSemana === 1;
+            const estaBloqueado = esDiaBloqueado(fechaStr);
 
             const nombresDias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
             html += `
-            <div class="calendar-day-box ${esHoy ? 'today' : ''} ${esPasado ? 'past' : ''} ${esCerrado ? 'closed' : ''}" 
+            <div class="calendar-day-box ${esHoy ? 'today' : ''} ${esPasado ? 'past' : ''} ${esCerrado ? 'closed' : ''} ${estaBloqueado ? 'blocked' : ''}" 
                  data-fecha="${fechaStr}"
-                 onclick="scrollToReservasCompletas('${fechaStr}')">
+                 onclick="mostrarReservasDelDia('${fechaStr}')">
                 <div class="day-date">
                     <span class="day-number">${fecha.getDate()}</span>
                     <span class="day-name">${nombresDias[diaSemana]}</span>
                 </div>
                 <div class="day-stats">
-                    ${esCerrado ? '<span class="closed-label">CERRADO</span>' : `
+                    ${estaBloqueado ? '<div class="blocked-label">✗ BLOQUEADO</div>' : 
+                      esCerrado ? '<span class="closed-label">CERRADO</span>' : `
                         <div class="stat-row"><span class="icon">🍽️</span><span class="count">${comida}</span></div>
                         <div class="stat-row"><span class="icon">🌙</span><span class="count">${cena}</span></div>
                     `}
                 </div>
+                ${adminLogueado && !esPasado && !esCerrado ? `
+                    <button class="toggle-block-btn" onclick="event.stopPropagation(); toggleDiaBloqueado('${fechaStr}')" title="${estaBloqueado ? 'Desbloquear día' : 'Bloquear día'}">
+                        ${estaBloqueado ? '🔓' : '🔒'}
+                    </button>
+                ` : ''}
             </div>`;
         }
 
@@ -357,35 +445,46 @@ function renderizarCalendario() {
     calendarGrid.innerHTML = html;
 }
 
-// FIX: Ahora scrollea a "Todas las Reservas" filtradas por día
-function scrollToReservasCompletas(fecha) {
-    // Marcar día seleccionado
+function mostrarReservasDelDia(fecha) {
     document.querySelectorAll('.calendar-day-box').forEach(c => c.classList.remove('selected'));
     const diaElement = document.querySelector(`.calendar-day-box[data-fecha="${fecha}"]`);
     if (diaElement) diaElement.classList.add('selected');
 
-    // Filtrar reservas del día en la lista completa
-    const reservasDelDia = reservas.filter(r => r.fecha === fecha && r.estado !== 'cancelada');
+    const container = document.getElementById('dayReservationsContent');
+    const selectedDate = document.getElementById('selectedDate');
+    const dayReservationsSection = document.getElementById('dayReservations');
 
-    // Scroll a la sección de "Todas las Reservas"
-    const reservationsList = document.querySelector('.reservations-list');
-    if (reservationsList) {
-        reservationsList.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!container || !selectedDate || !dayReservationsSection) return;
 
-        // Resaltar temporalmente las reservas del día
-        setTimeout(() => {
-            const allItems = document.querySelectorAll('.reservation-item');
-            allItems.forEach(item => item.classList.remove('highlight'));
+    selectedDate.textContent = formatearFecha(fecha);
 
-            reservasDelDia.forEach(r => {
-                const item = document.querySelector(`.reservation-item[data-id="${r.id}"]`);
-                if (item) {
-                    item.classList.add('highlight');
-                    setTimeout(() => item.classList.remove('highlight'), 3000);
-                }
-            });
-        }, 500);
+    const reservasDelDia = reservas.filter(r => r.fecha === fecha && r.estado !== 'cancelada')
+        .sort((a, b) => a.hora.localeCompare(b.hora));
+
+    if (reservasDelDia.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#999; padding:2rem;">No hay reservas para este día</p>';
+    } else {
+        let html = '';
+        reservasDelDia.forEach(r => {
+            html += `
+            <div class="reservation-item ${r.estado}" data-id="${r.id}">
+                <div class="reservation-info">
+                    <strong>${r.nombre}</strong>
+                    <small>🕐 ${r.hora} | 👥 ${r.personas === 'mas8' ? 'Más de 8' : r.personas} personas | 📞 ${r.telefono}</small>
+                    ${r.comentarios ? `<small>💬 ${r.comentarios}</small>` : ''}
+                </div>
+                <div class="reservation-actions">
+                    <span class="estado-badge ${r.estado}">${r.estado === 'pendiente' ? '⏳ Pendiente' : '✓ Confirmada'}</span>
+                    ${r.estado === 'pendiente' ? `<button class="confirm-btn" onclick="confirmarReserva('${r.id}')">✓ Confirmar</button>` : ''}
+                    <button class="delete-btn" onclick="eliminarReserva('${r.id}')">🗑️ Eliminar</button>
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html;
     }
+
+    dayReservationsSection.style.display = 'block';
+    dayReservationsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function renderizarTodasLasReservas() {
@@ -470,6 +569,11 @@ function guardarReservaManual(event) {
     const hora = document.getElementById('manualHora').value;
     const personas = document.getElementById('manualPersonas').value;
     const comentarios = sanitizarTexto(document.getElementById('manualComentarios')?.value || '');
+
+    if (esDiaBloqueado(fecha)) {
+        alert('❌ Este día está bloqueado. Desbloquéalo primero desde el calendario.');
+        return;
+    }
 
     const reserva = {
         id: Date.now() + Math.random().toString(36).substr(2, 9),
@@ -729,7 +833,6 @@ function formatearFecha(fechaStr) {
     return fecha.toLocaleDateString('es-ES', opciones);
 }
 
-// Cerrar modales al hacer clic fuera
 window.onclick = function(event) {
     if (event.target.classList.contains('modal') || event.target.classList.contains('legal-modal')) {
         event.target.classList.remove('show');

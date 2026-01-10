@@ -1,0 +1,195 @@
+/* ============================================
+   DÍAS BLOQUEADOS - CALENDARIO ADMIN
+   ============================================ */
+
+/* Día bloqueado */
+.calendar-day-box.blocked {
+    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+    border: 2px solid #e53935;
+    cursor: default;
+    position: relative;
+    opacity: 0.85;
+}
+
+.calendar-day-box.blocked:hover {
+    transform: none;
+    box-shadow: 0 4px 15px rgba(229, 57, 53, 0.3);
+}
+
+/* Cruz roja GRANDE tachando el día */
+.calendar-day-box.blocked::before {
+    content: '✗';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4rem;
+    color: rgba(211, 47, 47, 0.3);
+    font-weight: 900;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Línea diagonal tachado adicional */
+.calendar-day-box.blocked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: #d32f2f;
+    transform: translateY(-50%) rotate(-15deg);
+    box-shadow: 0 0 4px rgba(211, 47, 47, 0.5);
+}
+
+.calendar-day-box.blocked .day-number {
+    color: #c62828;
+    font-weight: 800;
+}
+
+.calendar-day-box.blocked .day-name {
+    color: #c62828;
+}
+
+/* Label de bloqueado */
+.blocked-label {
+    background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+    color: white;
+    padding: 0.4rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 8px rgba(229, 57, 53, 0.4);
+    position: relative;
+    z-index: 2;
+}
+
+/* Botón de bloquear/desbloquear */
+.toggle-block-btn {
+    position: absolute;
+    bottom: 0.3rem;
+    right: 0.3rem;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.toggle-block-btn:hover {
+    transform: scale(1.15);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    background: #fff;
+}
+
+.calendar-day-box.blocked .toggle-block-btn {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: #4caf50;
+}
+
+.calendar-day-box.blocked .toggle-block-btn:hover {
+    background: #4caf50;
+}
+
+/* Día de hoy bloqueado */
+.calendar-day-box.today.blocked {
+    border: 3px solid #e53935;
+    box-shadow: 0 4px 20px rgba(229, 57, 53, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .calendar-day-box.blocked::before {
+        font-size: 3rem;
+    }
+
+    .toggle-block-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+    }
+
+    .blocked-label {
+        font-size: 0.6rem;
+        padding: 0.3rem 0.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-day-box.blocked::before {
+        font-size: 2rem;
+    }
+
+    .toggle-block-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+        bottom: 0.2rem;
+        right: 0.2rem;
+    }
+
+    .blocked-label {
+        font-size: 0.55rem;
+        padding: 0.25rem 0.3rem;
+    }
+
+    .calendar-day-box.blocked::after {
+        height: 2px;
+    }
+}
+
+/* Animación al bloquear */
+@keyframes blockAnimation {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.calendar-day-box.blocked {
+    animation: blockAnimation 0.4s ease-out;
+}
+
+/* Asegurar que day-reservations se muestre correctamente */
+.day-reservations {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.day-reservations.show {
+    display: block;
+}
+
+.day-reservations h3 {
+    color: #8B4513;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.day-reservations h3 span {
+    color: #333;
+    font-weight: 600;
+}

@@ -15,19 +15,7 @@
     <link rel="stylesheet" href="phone-fix.css">
     <link rel="stylesheet" href="menu-center.css">
     <link rel="stylesheet" href="calendar-weeks.css">
-
-    <style>
-    /* FIX: Resaltado temporal de reservas */
-    .reservation-item.highlight {
-        animation: highlightPulse 3s ease-in-out;
-        border-left: 4px solid #FFA500 !important;
-    }
-
-    @keyframes highlightPulse {
-        0%, 100% { background: white; }
-        50% { background: #FFF3E0; }
-    }
-    </style>
+    <link rel="stylesheet" href="blocked-days.css">
 </head>
 <body>
     <!-- Header -->
@@ -86,7 +74,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="fecha">📅 Fecha *</label>
-                        <input type="date" id="fecha" onchange="actualizarHorasDisponibles()" required>
+                        <input type="date" id="fecha" required>
                     </div>
 
                     <div class="form-group">
@@ -300,10 +288,17 @@
                 <!-- Calendario -->
                 <div class="calendar-container">
                     <div class="calendar-header">
-                        <h3 style="color:#8B4513;">📅 Calendario de Reservas (Próximo Mes)</h3>
+                        <h3 style="color:#8B4513;">📅 Calendario de Reservas</h3>
+                        <p style="color:#666; font-size:0.9rem; margin-top:0.5rem;">Haz clic en 🔒 para bloquear/desbloquear días</p>
                         <button class="add-manual-btn" onclick="mostrarModalReservaManual()">+ Añadir Reserva Manual</button>
                     </div>
                     <div id="calendarGrid" class="calendar-grid"></div>
+                </div>
+
+                <!-- Reservas del día seleccionado -->
+                <div id="dayReservations" class="day-reservations">
+                    <h3>Reservas para <span id="selectedDate"></span></h3>
+                    <div id="dayReservationsContent"></div>
                 </div>
 
                 <!-- Todas las reservas -->
