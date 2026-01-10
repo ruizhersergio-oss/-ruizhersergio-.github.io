@@ -1,15 +1,13 @@
 // ============================================
-// RESTAURANTE LA CLAVE - APP.JS COMPLETO
-// Funcionalidades:
-// - Panel de día + Todas las reservas
-// - Días bloqueados por admin
-// - Fix timezone
+// RESTAURANTE LA CLAVE - APP.JS
+// Calendario MENSUAL con navegación
 // ============================================
 
 // Variables globales
 let reservas = [];
 let adminLogueado = false;
-let diasBloqueados = []; // Array de fechas bloqueadas
+let diasBloqueados = [];
+let mesActual = new Date(); // Para navegación del calendario
 
 // ============================================
 // INICIALIZACIÓN
@@ -58,7 +56,6 @@ function toggleDiaBloqueado(fecha) {
     const index = diasBloqueados.indexOf(fecha);
 
     if (index > -1) {
-        // Desbloquear
         if (confirm(`¿Desbloquear el día ${formatearFecha(fecha)}?`)) {
             diasBloqueados.splice(index, 1);
             guardarDiasBloqueados();
@@ -66,7 +63,6 @@ function toggleDiaBloqueado(fecha) {
             alert('✅ Día desbloqueado');
         }
     } else {
-        // Bloquear
         if (confirm(`¿Bloquear el día ${formatearFecha(fecha)}?\n\nNo se podrán hacer reservas para este día.`)) {
             diasBloqueados.push(fecha);
             guardarDiasBloqueados();
@@ -134,7 +130,6 @@ function inicializarFormularioReserva() {
         maxFecha.setDate(hoy.getDate() + 90);
         fechaInput.setAttribute('max', formatearFechaInput(maxFecha));
 
-        // Listener para validar días bloqueados
         fechaInput.addEventListener('change', validarFechaBloqueada);
     }
 }
@@ -168,7 +163,6 @@ function actualizarHorasDisponibles() {
 
     if (!fechaInput || !horaSelect || !fechaInput.value) return;
 
-    // Verificar si está bloqueado
     if (esDiaBloqueado(fechaInput.value)) {
         horaSelect.innerHTML = '<option value="">Día no disponible</option>';
         return;
@@ -251,7 +245,6 @@ function enviarReserva(event) {
     const personas = document.getElementById('personas').value;
     const comentarios = sanitizarTexto(document.getElementById('comentarios')?.value || '');
 
-    // Validar día bloqueado
     if (esDiaBloqueado(fecha)) {
         alert('❌ Este día no está disponible para reservas.');
         return;
@@ -349,6 +342,9 @@ function verificarPIN() {
         adminLogueado = true;
         document.getElementById('adminLogin').style.display = 'none';
         document.getElementById('adminContent').classList.add('active');
+
+        // Resetear al mes actual al entrar
+        mesActual = new Date();
         cargarPanelAdmin();
     } else {
         alert('❌ PIN incorrecto');
@@ -379,30 +375,66 @@ function actualizarEstadisticas() {
 }
 
 // ============================================
-// CALENDARIO CON DÍAS BLOQUEADOS
+// CALENDARIO MENSUAL CON NAVEGACIÓN
 // ============================================
+
+function cambiarMes(direccion) {
+    mesActual.setMonth(mesActual.getMonth() + direccion);
+    renderizarCalendario();
+}
+
+function irMesActual() {
+    mesActual = new Date();
+    renderizarCalendario();
+}
 
 function renderizarCalendario() {
     const calendarGrid = document.getElementById('calendarGrid');
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
-    const diaSemana = hoy.getDay();
-    const diasDesdeInicio = diaSemana === 0 ? 6 : diaSemana - 1;
-    const inicioSemana = new Date(hoy);
-    inicioSemana.setDate(hoy.getDate() - diasDesdeInicio);
+    const year = mesActual.getFullYear();
+    const month = mesActual.getMonth();
 
-    let html = '<div class="calendar-weeks-container">';
+    const nombresMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-    for (let semana = 0; semana < 5; semana++) {
+    // Primer día del mes
+    const primerDia = new Date(year, month, 1);
+    const diaSemanaInicio = primerDia.getDay();
+    const diasDesdeInicio = diaSemanaInicio === 0 ? 6 : diaSemanaInicio - 1;
+
+    // Último día del mes
+    const ultimoDia = new Date(year, month + 1, 0);
+    const diasEnMes = ultimoDia.getDate();
+
+    // Calcular fecha de inicio (lunes anterior al 1 del mes)
+    const fechaInicio = new Date(year, month, 1 - diasDesdeInicio);
+
+    // Calcular total de semanas necesarias
+    const totalDias = diasDesdeInicio + diasEnMes;
+    const semanas = Math.ceil(totalDias / 7);
+
+    // Header con navegación
+    let html = `
+    <div class="calendar-month-header">
+        <button class="nav-month-btn" onclick="cambiarMes(-1)" title="Mes anterior">◀</button>
+        <h3 class="calendar-month-title">${nombresMeses[month]} ${year}</h3>
+        <button class="nav-month-btn" onclick="cambiarMes(1)" title="Mes siguiente">▶</button>
+        <button class="today-btn" onclick="irMesActual()" title="Ir a hoy">Hoy</button>
+    </div>
+
+    <div class="calendar-weeks-container">`;
+
+    for (let semana = 0; semana < semanas; semana++) {
         html += '<div class="calendar-week-row">';
 
         for (let dia = 0; dia < 7; dia++) {
-            const fecha = new Date(inicioSemana);
-            fecha.setDate(inicioSemana.getDate() + (semana * 7) + dia);
+            const fecha = new Date(fechaInicio);
+            fecha.setDate(fechaInicio.getDate() + (semana * 7) + dia);
             const fechaStr = formatearFechaInput(fecha);
             const diaSemana = fecha.getDay();
 
+            const esDelMes = fecha.getMonth() === month;
             const reservasDelDia = reservas.filter(r => r.fecha === fechaStr && r.estado !== 'cancelada');
             const comida = reservasDelDia.filter(r => parseInt(r.hora.split(':')[0]) < 17).length;
             const cena = reservasDelDia.filter(r => parseInt(r.hora.split(':')[0]) >= 17).length;
@@ -415,7 +447,7 @@ function renderizarCalendario() {
             const nombresDias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
             html += `
-            <div class="calendar-day-box ${esHoy ? 'today' : ''} ${esPasado ? 'past' : ''} ${esCerrado ? 'closed' : ''} ${estaBloqueado ? 'blocked' : ''}" 
+            <div class="calendar-day-box ${!esDelMes ? 'otro-mes' : ''} ${esHoy ? 'today' : ''} ${esPasado ? 'past' : ''} ${esCerrado ? 'closed' : ''} ${estaBloqueado ? 'blocked' : ''}" 
                  data-fecha="${fechaStr}"
                  onclick="mostrarReservasDelDia('${fechaStr}')">
                 <div class="day-date">
@@ -429,7 +461,7 @@ function renderizarCalendario() {
                         <div class="stat-row"><span class="icon">🌙</span><span class="count">${cena}</span></div>
                     `}
                 </div>
-                ${adminLogueado && !esPasado && !esCerrado ? `
+                ${adminLogueado && !esPasado && !esCerrado && esDelMes ? `
                     <button class="toggle-block-btn" onclick="event.stopPropagation(); toggleDiaBloqueado('${fechaStr}')" title="${estaBloqueado ? 'Desbloquear día' : 'Bloquear día'}">
                         ${estaBloqueado ? '🔓' : '🔒'}
                     </button>
