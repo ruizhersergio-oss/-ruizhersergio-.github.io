@@ -1,13 +1,11 @@
 // ============================================
-// RESTAURANTE LA CLAVE - APP.JS
-// Calendario MES COMPLETO con navegación
+// RESTAURANTE LA CLAVE - APP.JS FINAL
+// Calendario MES COMPLETO sin navegación
 // ============================================
 
-// Variables globales
 let reservas = [];
 let adminLogueado = false;
 let diasBloqueados = [];
-let mesActual = new Date();
 
 // ============================================
 // INICIALIZACIÓN
@@ -342,8 +340,6 @@ function verificarPIN() {
         adminLogueado = true;
         document.getElementById('adminLogin').style.display = 'none';
         document.getElementById('adminContent').classList.add('active');
-
-        mesActual = new Date();
         cargarPanelAdmin();
     } else {
         alert('❌ PIN incorrecto');
@@ -374,28 +370,18 @@ function actualizarEstadisticas() {
 }
 
 // ============================================
-// CALENDARIO MES COMPLETO CON NAVEGACIÓN
+// CALENDARIO MES COMPLETO (SIN NAVEGACIÓN)
 // ============================================
-
-function cambiarMes(direccion) {
-    mesActual.setMonth(mesActual.getMonth() + direccion);
-    renderizarCalendario();
-}
-
-function irMesActual() {
-    mesActual = new Date();
-    renderizarCalendario();
-}
 
 function renderizarCalendario() {
     const calendarGrid = document.getElementById('calendarGrid');
+    if (!calendarGrid) return;
+
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
-    const year = mesActual.getFullYear();
-    const month = mesActual.getMonth();
-
-    const nombresMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const year = hoy.getFullYear();
+    const month = hoy.getMonth();
 
     const primerDia = new Date(year, month, 1);
     const diaSemanaInicio = primerDia.getDay();
@@ -409,15 +395,7 @@ function renderizarCalendario() {
     const totalDias = diasDesdeInicio + diasEnMes;
     const semanas = Math.ceil(totalDias / 7);
 
-    let html = `
-    <div class="calendar-month-header">
-        <button class="nav-month-btn" onclick="cambiarMes(-1)" title="Mes anterior">◀</button>
-        <h3 class="calendar-month-title">${nombresMeses[month]} ${year}</h3>
-        <button class="nav-month-btn" onclick="cambiarMes(1)" title="Mes siguiente">▶</button>
-        <button class="today-btn" onclick="irMesActual()" title="Ir a hoy">Hoy</button>
-    </div>
-
-    <div class="calendar-weeks-container">`;
+    let html = '<div class="calendar-weeks-container">';
 
     for (let semana = 0; semana < semanas; semana++) {
         html += '<div class="calendar-week-row">';
@@ -623,7 +601,7 @@ function guardarReservaManual(event) {
 }
 
 // ============================================
-// GESTIÓN DE MENÚ DEL DÍA
+// GESTIÓN DE MENÚ DEL DÍA - MEJORADO CON CACHE-BUSTING
 // ============================================
 
 function cargarMenuDelDia() {
@@ -648,20 +626,46 @@ function cargarMenuDelDia() {
 
         const gridContainer = document.createElement('div');
         gridContainer.className = 'menu-images-container';
-        gridContainer.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;';
+        gridContainer.style.cssText = `
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem auto 0;
+            max-width: 100%;
+            padding: 0 1rem;
+        `;
 
         menusActivos.forEach((menuUrl, index) => {
             const menuWrapper = document.createElement('div');
-            menuWrapper.style.cssText = 'position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.3s;';
-            menuWrapper.onmouseover = function() { this.style.transform = 'translateY(-5px)'; };
-            menuWrapper.onmouseout = function() { this.style.transform = 'translateY(0)'; };
+            menuWrapper.style.cssText = `
+                position: relative;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                cursor: pointer;
+                transition: transform 0.3s;
+                margin: 0 auto;
+                max-width: 500px;
+                width: 100%;
+            `;
+            menuWrapper.onmouseover = function() { this.style.transform = 'translateY(-5px) scale(1.02)'; };
+            menuWrapper.onmouseout = function() { this.style.transform = 'translateY(0) scale(1)'; };
 
             const img = document.createElement('img');
-            img.src = menuUrl;
+            // Cache busting: añadir timestamp para forzar recarga
+            const cacheBuster = new Date().getTime();
+            img.src = menuUrl.includes('?') ? `${menuUrl}&t=${cacheBuster}` : `${menuUrl}?t=${cacheBuster}`;
             img.className = 'menu-img-display';
             img.alt = `Menú del día ${index + 1}`;
             img.style.cssText = 'width: 100%; height: auto; display: block;';
+            img.loading = 'eager'; // Carga inmediata
             img.onclick = () => verImagenCompleta(menuUrl);
+
+            // Forzar recarga si la imagen está en caché
+            img.onerror = function() {
+                console.log('Reintentando carga de imagen...');
+                this.src = menuUrl + '?retry=' + Math.random();
+            };
 
             menuWrapper.appendChild(img);
             gridContainer.appendChild(menuWrapper);
@@ -791,6 +795,10 @@ function activarMenuEnHome(menuId, imgUrl) {
         if (!menusActivos.includes(imgUrl)) {
             menusActivos.push(imgUrl);
             localStorage.setItem('menus_activos', JSON.stringify(menusActivos));
+
+            // Disparar evento de actualización
+            window.dispatchEvent(new Event('menuActualizado'));
+
             cargarMenuDelDia();
             cargarGaleriaMenus();
             alert('✅ Menú activado en la página principal');
@@ -807,6 +815,8 @@ function desactivarMenuEnHome(imgUrl) {
         let menusActivos = JSON.parse(localStorage.getItem('menus_activos') || '[]');
         menusActivos = menusActivos.filter(url => url !== imgUrl);
         localStorage.setItem('menus_activos', JSON.stringify(menusActivos));
+
+        window.dispatchEvent(new Event('menuActualizado'));
 
         cargarMenuDelDia();
         cargarGaleriaMenus();
@@ -844,6 +854,13 @@ function eliminarFotoMenu(menuId) {
 function verImagenCompleta(url) {
     window.open(url, '_blank');
 }
+
+// Listener para actualizar menús en tiempo real
+window.addEventListener('storage', function(e) {
+    if (e.key === 'menus_activos') {
+        cargarMenuDelDia();
+    }
+});
 
 // ============================================
 // MODALES LEGALES
