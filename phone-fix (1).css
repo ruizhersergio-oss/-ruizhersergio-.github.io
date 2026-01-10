@@ -1,0 +1,46 @@
+/* Phone inputs fix (V3 - grid) */
+.phone-group {
+  display: grid !important;
+  grid-template-columns: clamp(78px, 20%, 110px) 1fr;
+  gap: 0.5rem;
+  align-items: stretch;
+  width: 100%;
+}
+
+.phone-group > select,
+.phone-group > input {
+  width: 100% !important;
+  min-width: 0;
+}
+
+.prefix-select {
+  padding: 0.8rem 0.4rem !important;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: clamp(0.9rem, 2vw, 0.95rem);
+  font-family: inherit;
+  background-color: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #8B4513 50%),
+    linear-gradient(135deg, #8B4513 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 55%,
+    calc(100% - 9px) 55%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 28px !important;
+}
+
+.phone-input {
+  padding: 0.8rem 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+}
+
+.prefix-select:focus,
+.phone-input:focus {
+  outline: none;
+  border-color: #8B4513;
+}

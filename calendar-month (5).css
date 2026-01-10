@@ -1,0 +1,257 @@
+/* ============================================
+   ESTILOS CALENDARIO - SIN NAVEGACIÓN
+   ============================================ */
+
+/* Días de otros meses (atenuados) */
+.calendar-day-box.otro-mes {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.calendar-day-box.otro-mes .day-number {
+    color: #ccc;
+}
+
+.calendar-day-box.otro-mes .day-name {
+    color: #ddd;
+}
+
+/* Contenedor del calendario */
+.calendar-container {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem auto;
+    max-width: 1400px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.calendar-weeks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin: 0 auto;
+}
+
+.calendar-week-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.6rem;
+}
+
+/* ============================================
+   CENTRADO DE BOTONES EN RESERVAS
+   ============================================ */
+
+.reservation-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.8rem;
+    background: white;
+    border-radius: 10px;
+    border-left: 4px solid #8B4513;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.reservation-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateX(4px);
+}
+
+.reservation-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.reservation-info strong {
+    color: #8B4513;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.reservation-info small {
+    color: #666;
+    font-size: 0.9rem;
+    display: block;
+}
+
+.reservation-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+    margin-left: 1rem;
+}
+
+.estado-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.estado-badge.pendiente {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.estado-badge.confirmada {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.confirm-btn,
+.delete-btn {
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.confirm-btn {
+    background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(76, 175, 80, 0.3);
+}
+
+.confirm-btn:hover {
+    background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4);
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(244, 67, 54, 0.3);
+}
+
+.delete-btn:hover {
+    background: linear-gradient(135deg, #e57373 0%, #f44336 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(244, 67, 54, 0.4);
+}
+
+/* ============================================
+   MENÚ DEL DÍA - CENTRADO Y RESPONSIVE
+   ============================================ */
+
+.menu-preview-container {
+    margin: 2rem auto;
+    padding: 0 1rem;
+    max-width: 1200px;
+}
+
+.menu-images-container {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    gap: 1.5rem !important;
+    margin: 1.5rem auto 0 !important;
+    justify-items: center !important;
+}
+
+.menu-img-display {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
+}
+
+/* Responsive: En móvil, acciones en vertical */
+@media (max-width: 768px) {
+    .calendar-container {
+        padding: 1rem;
+    }
+
+    .calendar-week-row {
+        gap: 0.4rem;
+    }
+
+    .reservation-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .reservation-actions {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+        margin-top: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .estado-badge,
+    .confirm-btn,
+    .delete-btn {
+        font-size: 0.8rem;
+        padding: 0.35rem 0.7rem;
+    }
+
+    .menu-images-container {
+        grid-template-columns: 1fr !important;
+        padding: 0 0.5rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-container {
+        padding: 0.8rem;
+    }
+
+    .calendar-week-row {
+        gap: 0.3rem;
+    }
+
+    .reservation-item {
+        padding: 0.9rem;
+    }
+
+    .reservation-info strong {
+        font-size: 1rem;
+    }
+
+    .reservation-info small {
+        font-size: 0.8rem;
+    }
+
+    .reservation-actions {
+        gap: 0.4rem;
+    }
+
+    .estado-badge,
+    .confirm-btn,
+    .delete-btn {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+.reservation-item.pendiente {
+    border-left-color: #ffc107;
+    background: linear-gradient(135deg, #ffffff 0%, #fffef8 100%);
+}
+
+.reservation-item.confirmada {
+    border-left-color: #4caf50;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fff9 100%);
+}
