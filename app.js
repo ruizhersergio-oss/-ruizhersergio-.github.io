@@ -1,6 +1,6 @@
 // ============================================
 // RESTAURANTE LA CLAVE - APP.JS
-// Calendario MENSUAL con navegación
+// Calendario por SEMANAS con navegación mensual
 // ============================================
 
 // Variables globales
@@ -343,7 +343,6 @@ function verificarPIN() {
         document.getElementById('adminLogin').style.display = 'none';
         document.getElementById('adminContent').classList.add('active');
 
-        // Resetear al mes actual al entrar
         mesActual = new Date();
         cargarPanelAdmin();
     } else {
@@ -375,7 +374,7 @@ function actualizarEstadisticas() {
 }
 
 // ============================================
-// CALENDARIO MENSUAL CON NAVEGACIÓN
+// CALENDARIO POR SEMANAS (COMO ANTES)
 // ============================================
 
 function cambiarMes(direccion) {
@@ -395,24 +394,28 @@ function renderizarCalendario() {
 
     const year = mesActual.getFullYear();
     const month = mesActual.getMonth();
-
     const nombresMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-    // Primer día del mes
-    const primerDia = new Date(year, month, 1);
-    const diaSemanaInicio = primerDia.getDay();
-    const diasDesdeInicio = diaSemanaInicio === 0 ? 6 : diaSemanaInicio - 1;
+    // Encontrar el lunes de la semana actual del mes seleccionado
+    const primerDiaMes = new Date(year, month, 1);
+    const diaActualMes = new Date(year, month, hoy.getDate());
 
-    // Último día del mes
-    const ultimoDia = new Date(year, month + 1, 0);
-    const diasEnMes = ultimoDia.getDate();
+    // Si estamos viendo el mes actual, empezar desde hoy
+    // Si no, empezar desde el primer día del mes
+    let fechaInicio;
+    if (year === hoy.getFullYear() && month === hoy.getMonth()) {
+        fechaInicio = new Date(hoy);
+    } else {
+        fechaInicio = new Date(primerDiaMes);
+    }
 
-    // Calcular fecha de inicio (lunes anterior al 1 del mes)
-    const fechaInicio = new Date(year, month, 1 - diasDesdeInicio);
+    // Ajustar al lunes anterior
+    const diaSemana = fechaInicio.getDay();
+    const diasHastaLunes = diaSemana === 0 ? 6 : diaSemana - 1;
+    fechaInicio.setDate(fechaInicio.getDate() - diasHastaLunes);
 
-    // Calcular total de semanas necesarias
-    const totalDias = diasDesdeInicio + diasEnMes;
-    const semanas = Math.ceil(totalDias / 7);
+    // Mostrar 3 semanas (21 días)
+    const totalDias = 21;
 
     // Header con navegación
     let html = `
@@ -425,7 +428,8 @@ function renderizarCalendario() {
 
     <div class="calendar-weeks-container">`;
 
-    for (let semana = 0; semana < semanas; semana++) {
+    // Generar 3 semanas
+    for (let semana = 0; semana < 3; semana++) {
         html += '<div class="calendar-week-row">';
 
         for (let dia = 0; dia < 7; dia++) {
@@ -461,7 +465,7 @@ function renderizarCalendario() {
                         <div class="stat-row"><span class="icon">🌙</span><span class="count">${cena}</span></div>
                     `}
                 </div>
-                ${adminLogueado && !esPasado && !esCerrado && esDelMes ? `
+                ${adminLogueado && !esPasado && !esCerrado ? `
                     <button class="toggle-block-btn" onclick="event.stopPropagation(); toggleDiaBloqueado('${fechaStr}')" title="${estaBloqueado ? 'Desbloquear día' : 'Bloquear día'}">
                         ${estaBloqueado ? '🔓' : '🔒'}
                     </button>
@@ -629,7 +633,7 @@ function guardarReservaManual(event) {
 }
 
 // ============================================
-// GESTIÓN DE MENÚ DEL DÍA - ARREGLADO
+// GESTIÓN DE MENÚ DEL DÍA
 // ============================================
 
 function cargarMenuDelDia() {
@@ -640,7 +644,6 @@ function cargarMenuDelDia() {
 
         if (!container) return;
 
-        // Eliminar contenedor previo si existe
         const existingContainer = container.querySelector('.menu-images-container');
         if (existingContainer) {
             existingContainer.remove();
@@ -651,10 +654,8 @@ function cargarMenuDelDia() {
             return;
         }
 
-        // Ocultar mensaje de no hay menú
         if (noMenuMsg) noMenuMsg.style.display = 'none';
 
-        // Crear contenedor de imágenes
         const gridContainer = document.createElement('div');
         gridContainer.className = 'menu-images-container';
         gridContainer.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;';
