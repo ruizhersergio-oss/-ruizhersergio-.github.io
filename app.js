@@ -1,13 +1,13 @@
 // ============================================
 // RESTAURANTE LA CLAVE - APP.JS
-// Calendario por SEMANAS con navegación mensual
+// Calendario MES COMPLETO con navegación
 // ============================================
 
 // Variables globales
 let reservas = [];
 let adminLogueado = false;
 let diasBloqueados = [];
-let mesActual = new Date(); // Para navegación del calendario
+let mesActual = new Date();
 
 // ============================================
 // INICIALIZACIÓN
@@ -374,7 +374,7 @@ function actualizarEstadisticas() {
 }
 
 // ============================================
-// CALENDARIO POR SEMANAS (COMO ANTES)
+// CALENDARIO MES COMPLETO CON NAVEGACIÓN
 // ============================================
 
 function cambiarMes(direccion) {
@@ -394,30 +394,21 @@ function renderizarCalendario() {
 
     const year = mesActual.getFullYear();
     const month = mesActual.getMonth();
+
     const nombresMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-    // Encontrar el lunes de la semana actual del mes seleccionado
-    const primerDiaMes = new Date(year, month, 1);
-    const diaActualMes = new Date(year, month, hoy.getDate());
+    const primerDia = new Date(year, month, 1);
+    const diaSemanaInicio = primerDia.getDay();
+    const diasDesdeInicio = diaSemanaInicio === 0 ? 6 : diaSemanaInicio - 1;
 
-    // Si estamos viendo el mes actual, empezar desde hoy
-    // Si no, empezar desde el primer día del mes
-    let fechaInicio;
-    if (year === hoy.getFullYear() && month === hoy.getMonth()) {
-        fechaInicio = new Date(hoy);
-    } else {
-        fechaInicio = new Date(primerDiaMes);
-    }
+    const ultimoDia = new Date(year, month + 1, 0);
+    const diasEnMes = ultimoDia.getDate();
 
-    // Ajustar al lunes anterior
-    const diaSemana = fechaInicio.getDay();
-    const diasHastaLunes = diaSemana === 0 ? 6 : diaSemana - 1;
-    fechaInicio.setDate(fechaInicio.getDate() - diasHastaLunes);
+    const fechaInicio = new Date(year, month, 1 - diasDesdeInicio);
 
-    // Mostrar 3 semanas (21 días)
-    const totalDias = 21;
+    const totalDias = diasDesdeInicio + diasEnMes;
+    const semanas = Math.ceil(totalDias / 7);
 
-    // Header con navegación
     let html = `
     <div class="calendar-month-header">
         <button class="nav-month-btn" onclick="cambiarMes(-1)" title="Mes anterior">◀</button>
@@ -428,8 +419,7 @@ function renderizarCalendario() {
 
     <div class="calendar-weeks-container">`;
 
-    // Generar 3 semanas
-    for (let semana = 0; semana < 3; semana++) {
+    for (let semana = 0; semana < semanas; semana++) {
         html += '<div class="calendar-week-row">';
 
         for (let dia = 0; dia < 7; dia++) {
@@ -465,7 +455,7 @@ function renderizarCalendario() {
                         <div class="stat-row"><span class="icon">🌙</span><span class="count">${cena}</span></div>
                     `}
                 </div>
-                ${adminLogueado && !esPasado && !esCerrado ? `
+                ${adminLogueado && !esPasado && !esCerrado && esDelMes ? `
                     <button class="toggle-block-btn" onclick="event.stopPropagation(); toggleDiaBloqueado('${fechaStr}')" title="${estaBloqueado ? 'Desbloquear día' : 'Bloquear día'}">
                         ${estaBloqueado ? '🔓' : '🔒'}
                     </button>
