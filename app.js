@@ -629,7 +629,7 @@ function guardarReservaManual(event) {
 }
 
 // ============================================
-// GESTIÓN DE MENÚ DEL DÍA
+// GESTIÓN DE MENÚ DEL DÍA - ARREGLADO
 // ============================================
 
 function cargarMenuDelDia() {
@@ -638,6 +638,9 @@ function cargarMenuDelDia() {
         const container = document.querySelector('.menu-preview-container');
         const noMenuMsg = document.getElementById('noMenuMsg');
 
+        if (!container) return;
+
+        // Eliminar contenedor previo si existe
         const existingContainer = container.querySelector('.menu-images-container');
         if (existingContainer) {
             existingContainer.remove();
@@ -648,18 +651,29 @@ function cargarMenuDelDia() {
             return;
         }
 
+        // Ocultar mensaje de no hay menú
         if (noMenuMsg) noMenuMsg.style.display = 'none';
 
+        // Crear contenedor de imágenes
         const gridContainer = document.createElement('div');
         gridContainer.className = 'menu-images-container';
+        gridContainer.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;';
 
         menusActivos.forEach((menuUrl, index) => {
+            const menuWrapper = document.createElement('div');
+            menuWrapper.style.cssText = 'position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.3s;';
+            menuWrapper.onmouseover = function() { this.style.transform = 'translateY(-5px)'; };
+            menuWrapper.onmouseout = function() { this.style.transform = 'translateY(0)'; };
+
             const img = document.createElement('img');
             img.src = menuUrl;
             img.className = 'menu-img-display';
             img.alt = `Menú del día ${index + 1}`;
+            img.style.cssText = 'width: 100%; height: auto; display: block;';
             img.onclick = () => verImagenCompleta(menuUrl);
-            gridContainer.appendChild(img);
+
+            menuWrapper.appendChild(img);
+            gridContainer.appendChild(menuWrapper);
         });
 
         container.appendChild(gridContainer);
