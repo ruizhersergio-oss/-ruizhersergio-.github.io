@@ -7,6 +7,7 @@
     margin: 0; 
     padding: 0; 
     box-sizing: border-box; 
+    -webkit-tap-highlight-color: transparent; /* Mejora para iOS */
 }
 
 html { 
@@ -774,32 +775,40 @@ input[type="file"] {
     overflow-y: auto; 
 }
 
-/* ⚠️ CORRECCIÓN: Campos de teléfono más usables */
+/* ⚠️ CORRECCIÓN TELÉFONO (V2 - FORZADA) */
 .phone-group { 
-    display: flex; 
+    display: flex !important; /* Forzar flexbox */
+    flex-direction: row !important; /* Forzar fila */
+    flex-wrap: nowrap !important; /* Evitar salto de línea */
     gap: 0.5rem; 
     align-items: stretch;
+    width: 100%;
 }
 
 .prefix-select { 
-    width: 90px; /* Reducido de 120px */
-    padding: 0.8rem 0.3rem; /* Menos padding horizontal */
+    width: 30% !important; /* Ancho fijo relativo */
+    max-width: 90px; 
+    min-width: 80px;
+    padding: 0.8rem 0.3rem !important;
     border: 2px solid #ddd; 
     border-radius: 8px; 
-    font-size: clamp(0.9rem, 2vw, 0.95rem); /* Ligeramente más pequeño */
+    font-size: clamp(0.9rem, 2vw, 0.95rem); 
     font-family: inherit; 
     transition: border-color 0.3s; 
-    flex-shrink: 0; /* No se encoge */
-}
-
-.prefix-select:focus { 
-    outline: none; 
-    border-color: #8B4513; 
+    flex-shrink: 0; 
+    background-color: white; /* Asegurar fondo blanco */
+    appearance: none; /* Resetear estilos nativos */
+    -webkit-appearance: none;
+    text-align: center;
 }
 
 .phone-input { 
-    flex: 1; /* Ocupa todo el espacio restante */
-    min-width: 0; /* Permite que se encoja si es necesario */
+    flex: 1 !important; /* Ocupar resto */
+    width: auto !important;
+    min-width: 0; 
+    padding: 0.8rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
 }
 
 /* Hero */
@@ -1459,13 +1468,20 @@ footer p {
         grid-template-columns: 1fr; 
     }
 
-    /* ⚠️ MÓVIL: Phone group en columna si es muy estrecho */
+    /* ⚠️ MÓVIL FORZADO: Asegurar que nunca se rompa */
     .phone-group { 
-        flex-direction: row; /* Mantener en fila si cabe */
+        display: flex !important;
+        flex-direction: row !important;
+        width: 100% !important;
     }
 
     .prefix-select { 
-        width: 85px; /* Aún más pequeño en móvil */
+        width: 35% !important;
+        max-width: 90px;
+    }
+
+    .phone-input {
+        width: 65% !important;
     }
 
     .legal-content { 
